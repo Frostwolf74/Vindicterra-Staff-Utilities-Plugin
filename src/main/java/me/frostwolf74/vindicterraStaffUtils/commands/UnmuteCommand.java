@@ -2,6 +2,7 @@ package me.frostwolf74.vindicterraStaffUtils.commands;
 import me.frostwolf74.vindicterraStaffUtils.VindicterraStaffUtils;
 
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
 
 import org.bukkit.NamespacedKey;
@@ -20,7 +21,7 @@ public class UnmuteCommand implements CommandExecutor {
             Player target = p.getServer().getPlayer(strings[0]);
 
             if (target == null) {
-                p.sendMessage(Component.text("Player not found", TextColor.color(255, 0 , 0)));
+                p.sendMessage(Component.text("Player not found", NamedTextColor.RED));
                 return true;
             }
 
@@ -31,7 +32,7 @@ public class UnmuteCommand implements CommandExecutor {
                 VindicterraStaffUtils.getRunningPlayerMutedTasks().remove(target.getUniqueId());
             }
             else{
-                p.sendMessage(Component.text("Player not muted", TextColor.color(255, 0 , 0)));
+                p.sendMessage(Component.text("Player not muted", NamedTextColor.RED));
             }
         }
         return false;

@@ -30,5 +30,9 @@ public class onJoinEventListener implements Listener {
             runningTasks.put(e.getPlayer().getUniqueId(), muteTask);
             VindicterraStaffUtils.setRunningPlayerMutedTasks(runningTasks);
         }
+
+        if(Boolean.TRUE.equals(e.getPlayer().getPersistentDataContainer().get(new NamespacedKey(VindicterraStaffUtils.getPlugin(), "isStaffChatEnabled"), PersistentDataType.BOOLEAN))){
+            e.getPlayer().getPersistentDataContainer().set(new NamespacedKey(VindicterraStaffUtils.getPlugin(), "isStaffChatEnabled"), PersistentDataType.BOOLEAN, false);
+        }
     }
 }

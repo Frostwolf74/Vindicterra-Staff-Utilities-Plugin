@@ -36,6 +36,7 @@ public class VanishCommand implements CommandExecutor {
                     }
 
                     Player target = p.getServer().getPlayer(strings[0]);
+
                     vanishPlayer(target, true);
                 }
             }
@@ -64,7 +65,7 @@ public class VanishCommand implements CommandExecutor {
 
     public static void vanishPlayer(Player p, Boolean unvanish){
         for(Player onlinePlayer : Bukkit.getOnlinePlayers()){
-            if(onlinePlayer.equals(p) || onlinePlayer.hasPermission("VSU")){
+            if(onlinePlayer.equals(p) || (onlinePlayer.hasPermission("VSU") && !unvanish)){
                 continue;
             }
 

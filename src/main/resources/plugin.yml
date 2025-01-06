@@ -43,7 +43,7 @@ commands:
 
   mute:
     description: Prevents a player from sending public chat messages
-    usage: /mute <player> <length<h/d/w/m/y>>
+    usage: /mute <player> [length<h/d/w/m/y>] <reason>
     permission: VSU.punish.mute
 
   unmute:
@@ -53,12 +53,12 @@ commands:
 
   kick:
     description: Kicks a player from the server
-    usage: /kick <player> <length<h/d/w/m/y>>
+    usage: /kick <player> [length<h/d/w/m/y>] <reason>
     permission: VSU.punish.kick
 
   ban:
     description: Bans a player from the server
-    usage: /ban <player> <length<h/d/w/m/y>>
+    usage: /ban <player> [length<h/d/w/m/y>] <reason>
     permission: VSU.punish.ban
 
   unban:

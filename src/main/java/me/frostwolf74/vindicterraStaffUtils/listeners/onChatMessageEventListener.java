@@ -2,7 +2,9 @@ package me.frostwolf74.vindicterraStaffUtils.listeners;
 
 import io.papermc.paper.event.player.AsyncChatEvent;
 import me.frostwolf74.vindicterraStaffUtils.VindicterraStaffUtils;
+import me.frostwolf74.vindicterraStaffUtils.commands.StaffChatCommand;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.NamespacedKey;
@@ -19,6 +21,13 @@ public class onChatMessageEventListener implements Listener {
             int timeRemaining = (e.getPlayer().getPersistentDataContainer().get(new NamespacedKey(VindicterraStaffUtils.getPlugin(), "unmuteTimeStamp"), PersistentDataType.INTEGER) - (int) (System.currentTimeMillis() / 1000L));
 
             e.getPlayer().sendMessage(Component.text("You are muted for the next " + ((float) (timeRemaining/60)/60) + " hours, you cannot send messages.", TextColor.color(255, 0, 0), TextDecoration.BOLD));
+        }
+        if(Boolean.TRUE.equals(e.getPlayer().getPersistentDataContainer().get(new NamespacedKey(VindicterraStaffUtils.getPlugin(), "isStaffChatEnabled"), PersistentDataType.BOOLEAN))){
+            if(e.message().equals(Component.text(" "))) return;
+
+            StaffChatCommand.sendStaffChatMessage(e.getPlayer(), ((TextComponent) e.message()).content());
+
+            e.setCancelled(true);
         }
     }
 }

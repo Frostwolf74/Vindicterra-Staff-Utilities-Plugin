@@ -1,6 +1,7 @@
 package me.frostwolf74.vindicterraStaffUtils.commands;
 
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -18,7 +19,7 @@ public class KickCommand implements CommandExecutor {
             Player target = p.getServer().getPlayer(strings[0]);
 
             if(target != null){
-                p.sendMessage(Component.text("Player not found or not online", TextColor.color(255, 0, 0)));
+                p.sendMessage(Component.text("Player not found or not online", NamedTextColor.RED));
                 return true;
             }
 
