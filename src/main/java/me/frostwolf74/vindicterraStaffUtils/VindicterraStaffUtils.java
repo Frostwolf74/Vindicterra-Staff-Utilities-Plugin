@@ -36,8 +36,9 @@ public final class VindicterraStaffUtils extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new ItemPickUpListener(), this);
         getServer().getPluginManager().registerEvents(new BlockBreakListener(), this);
         getServer().getPluginManager().registerEvents(new onChatMessageEventListener(), this);
-        getServer().getPluginManager().registerEvents(new onJoinEventListener(), this);
+        getServer().getPluginManager().registerEvents(new onPlayerJoinEventListener(), this);
         getServer().getPluginManager().registerEvents(new PlayerDamageEntityEventListener(), this);
+        getServer().getPluginManager().registerEvents(new onPlayerMoveEventListener(), this);
     }
 
     @Override

@@ -21,11 +21,10 @@ public class VanishCommand implements CommandExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) { // TODO needs player-on-player testing
         if(commandSender instanceof Player p){ // TODO implement supervanish later
-            if(!(p.hasPermission("VSU.freeze"))) return true;
+            if(!(p.hasPermission("VSU.vanish"))) return true;
 
             if(Boolean.TRUE.equals(p.getPersistentDataContainer().get(new NamespacedKey(VindicterraStaffUtils.getPlugin(), "isVanished"), PersistentDataType.BOOLEAN))){
                 p.getPersistentDataContainer().set(new NamespacedKey(VindicterraStaffUtils.getPlugin(), "isVanished"), PersistentDataType.BOOLEAN, false);
-
                 if(strings.length < 1){ // unvanishes self
                     vanishPlayer(p, true);
                 }

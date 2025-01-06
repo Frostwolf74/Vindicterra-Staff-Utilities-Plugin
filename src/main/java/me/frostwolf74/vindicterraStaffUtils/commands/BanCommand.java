@@ -21,7 +21,7 @@ public class BanCommand implements CommandExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
         if(commandSender instanceof Player p) {
-            if (!p.hasPermission("VSU.punish.ban")) return false;
+            if (!p.hasPermission("VSU.punish.ban")) return true;
 
             if (strings.length == 0) {
                 return false;

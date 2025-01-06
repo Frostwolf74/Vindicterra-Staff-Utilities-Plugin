@@ -18,6 +18,8 @@ public class UnmuteCommand implements CommandExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
         if(commandSender instanceof Player p){
+            if(!p.hasPermission("VSU.punish.mute")) return true;
+
             Player target = p.getServer().getPlayer(strings[0]);
 
             if (target == null) {

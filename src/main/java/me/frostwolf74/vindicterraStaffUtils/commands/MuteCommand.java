@@ -2,14 +2,11 @@ package me.frostwolf74.vindicterraStaffUtils.commands;
 
 import me.frostwolf74.vindicterraStaffUtils.VindicterraStaffUtils;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
 
 import net.kyori.adventure.text.format.TextDecoration;
-import org.bukkit.BanList;
-import org.bukkit.ChatColor;
+
 import org.bukkit.NamespacedKey;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -26,7 +23,7 @@ public class MuteCommand implements CommandExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
         if(commandSender instanceof Player p) {
-            if(!p.hasPermission("VSU.punish.mute")) return false;
+            if(!p.hasPermission("VSU.punish.mute")) return true;
 
             Player target = p.getServer().getPlayer(strings[0]);
 
