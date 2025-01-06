@@ -29,6 +29,7 @@ public class UnbanCommand implements CommandExecutor {
 
             if(target.isBanned()){
                 target.getPlayer().getServer().getBanList(BanList.Type.NAME).pardon(target.getName());
+                p.sendMessage(Component.text("\n" + target.getName() + " has been unbanned\n", NamedTextColor.GREEN));
             }
             else{
                 p.sendMessage(Component.text("Player not banned", NamedTextColor.RED));

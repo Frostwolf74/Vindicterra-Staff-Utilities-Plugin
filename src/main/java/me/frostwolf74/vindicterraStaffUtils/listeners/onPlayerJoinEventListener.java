@@ -11,6 +11,7 @@ import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.scheduler.BukkitTask;
 
 import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
 
 
@@ -38,6 +39,10 @@ public class onPlayerJoinEventListener implements Listener {
 
         if(Boolean.TRUE.equals(e.getPlayer().getPersistentDataContainer().get(new NamespacedKey(VindicterraStaffUtils.getPlugin(), "inStaffMode"), PersistentDataType.BOOLEAN))) {
             StaffModeCommand.applyStaffMode(e.getPlayer());
+        }
+
+        if(!Objects.equals(e.getPlayer().getPersistentDataContainer().get(new NamespacedKey(VindicterraStaffUtils.getPlugin(), "awaitingInput"), PersistentDataType.STRING), "NONE")) {
+            e.getPlayer().getPersistentDataContainer().set(new NamespacedKey(VindicterraStaffUtils.getPlugin(), "awaitingInput"), PersistentDataType.STRING, "NONE");
         }
     }
 }

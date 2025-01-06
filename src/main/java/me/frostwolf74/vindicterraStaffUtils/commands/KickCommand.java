@@ -22,13 +22,13 @@ public class KickCommand implements CommandExecutor {
                 return true;
             }
 
-            StringBuilder reason = new StringBuilder("You have been kicked for: ");
+            StringBuilder reason = new StringBuilder("\nYou have been kicked for: ");
 
             for (int i = 1; i < strings.length; i++) {
                 reason.append(strings[i]);
             }
 
-            target.kick(Component.text(reason.toString(), NamedTextColor.RED));
+            target.kick(Component.text(reason + "\n", NamedTextColor.RED));
         }
         return false;
     }
