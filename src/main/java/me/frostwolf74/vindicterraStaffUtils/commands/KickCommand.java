@@ -2,7 +2,6 @@ package me.frostwolf74.vindicterraStaffUtils.commands;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
-import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -23,6 +22,13 @@ public class KickCommand implements CommandExecutor {
                 return true;
             }
 
+            StringBuilder reason = new StringBuilder("You have been kicked for: ");
+
+            for (int i = 1; i < strings.length; i++) {
+                reason.append(strings[i]);
+            }
+
+            target.kick(Component.text(reason.toString(), NamedTextColor.RED));
         }
         return false;
     }

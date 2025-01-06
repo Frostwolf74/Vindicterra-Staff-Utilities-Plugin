@@ -57,9 +57,10 @@ public class ItemInteractionListener implements Listener {
 
                 RayTraceResult trace = e.getPlayer().getServer().getWorld(e.getPlayer().getWorld().getName()).rayTraceEntities(e.getInteractionPoint(), e.getClickedPosition(), 10);
 
-                if(!(trace == null)){
-                    if(trace.getHitEntity() instanceof Player target){
-                        FreezeCommand.freezePlayer(target);
+                if(trace != null){
+                    e.getPlayer().sendMessage("Ray trace result: " + trace.getHitEntity());
+                    if(trace instanceof Player target){
+                        FreezeCommand.freezePlayer(e.getPlayer(), target);
                     }
                 }
             }

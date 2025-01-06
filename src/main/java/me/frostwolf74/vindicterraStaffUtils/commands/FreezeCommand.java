@@ -2,7 +2,9 @@ package me.frostwolf74.vindicterraStaffUtils.commands;
 
 import me.frostwolf74.vindicterraStaffUtils.VindicterraStaffUtils;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
+import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.NamespacedKey;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -27,7 +29,7 @@ public class FreezeCommand implements CommandExecutor {
             }
 
             assert target != null;
-            freezePlayer(target);
+            freezePlayer(p, target);
 
             return true;
 
@@ -35,12 +37,14 @@ public class FreezeCommand implements CommandExecutor {
         return false;
     }
 
-    public static void freezePlayer(Player p){
-        if(Boolean.TRUE.equals(p.getPersistentDataContainer().get(new NamespacedKey(VindicterraStaffUtils.getPlugin(), "isFrozen"), PersistentDataType.BOOLEAN))){
-            p.getPersistentDataContainer().set(new NamespacedKey(VindicterraStaffUtils.getPlugin(), "isFrozen"), PersistentDataType.BOOLEAN, false);
+    public static void freezePlayer(Player p, Player target){
+        if(Boolean.TRUE.equals(target.getPersistentDataContainer().get(new NamespacedKey(VindicterraStaffUtils.getPlugin(), "isFrozen"), PersistentDataType.BOOLEAN))){
+            target.getPersistentDataContainer().set(new NamespacedKey(VindicterraStaffUtils.getPlugin(), "isFrozen"), PersistentDataType.BOOLEAN, false);
+            target.sendMessage(Component.text("\nYou have been unfrozen\n", NamedTextColor.AQUA, TextDecoration.BOLD));
         }
         else {
-            p.getPersistentDataContainer().set(new NamespacedKey(VindicterraStaffUtils.getPlugin(), "isFrozen"), PersistentDataType.BOOLEAN, true);
+            target.getPersistentDataContainer().set(new NamespacedKey(VindicterraStaffUtils.getPlugin(), "isFrozen"), PersistentDataType.BOOLEAN, true);
+            target.sendMessage(Component.text("\nYou have been frozen by " + p.getName() + "\n", NamedTextColor.AQUA, TextDecoration.BOLD));
         }
     }
 }

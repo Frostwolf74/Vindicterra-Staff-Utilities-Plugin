@@ -43,18 +43,11 @@ public class StaffModeCommand implements CommandExecutor {
     }
 
     public static boolean applyStaffMode(Player p){
-
-
         FileConfiguration config = VindicterraStaffUtils.getPlugin().getConfig();
 
         if(Boolean.TRUE.equals(p.getPersistentDataContainer().get(new NamespacedKey(VindicterraStaffUtils.getPlugin(), "inStaffMode"), PersistentDataType.BOOLEAN))) {
             // key is disabled first as a failsafe
             p.getPersistentDataContainer().set(new NamespacedKey(VindicterraStaffUtils.getPlugin(), "inStaffMode"), PersistentDataType.BOOLEAN, false);
-
-            // only unvanish the player if they are already vanished
-            if(Boolean.TRUE.equals(p.getPersistentDataContainer().get(new NamespacedKey(VindicterraStaffUtils.getPlugin(), "isVanished"), PersistentDataType.BOOLEAN))){
-                VanishCommand.vanishPlayer(p, true);
-            }
 
             p.getInventory().clear();
             ItemStack[] items = new ItemStack[41];
@@ -76,13 +69,19 @@ public class StaffModeCommand implements CommandExecutor {
 
             p.getInventory().setContents(items);
             p.setGameMode(GameMode.SURVIVAL);
+
+            // only unvanish the player if they are already vanished
+            // last as a failsafe if the command ever breaks for any reason the player will not lose their inventory
+            if(Boolean.TRUE.equals(p.getPersistentDataContainer().get(new NamespacedKey(VindicterraStaffUtils.getPlugin(), "isVanished"), PersistentDataType.BOOLEAN))){
+                VanishCommand.vanishPlayer(p, true);
+            }
         }
         else{ // if player is not in staff mode, enable it
             PlayerInventory savedInventory = p.getInventory();
             List<ItemStack> items = new ArrayList<>();
 
             // only vanish the player if they arent already vanished
-            if(Boolean.FALSE.equals(p.getPersistentDataContainer().get(new NamespacedKey(VindicterraStaffUtils.getPlugin(), "isVanished"), PersistentDataType.BOOLEAN))){
+            if(!Boolean.TRUE.equals(p.getPersistentDataContainer().get(new NamespacedKey(VindicterraStaffUtils.getPlugin(), "isVanished"), PersistentDataType.BOOLEAN))){ // null = false
                 VanishCommand.vanishPlayer(p, false);
             }
 

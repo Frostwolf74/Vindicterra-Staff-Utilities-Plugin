@@ -5,7 +5,7 @@ import me.frostwolf74.vindicterraStaffUtils.VindicterraStaffUtils;
 import me.frostwolf74.vindicterraStaffUtils.commands.StaffChatCommand;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
-import net.kyori.adventure.text.format.TextColor;
+import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.NamespacedKey;
 import org.bukkit.event.EventHandler;
@@ -20,12 +20,21 @@ public class onChatMessageEventListener implements Listener {
             e.setCancelled(true);
             int timeRemaining = (e.getPlayer().getPersistentDataContainer().get(new NamespacedKey(VindicterraStaffUtils.getPlugin(), "unmuteTimeStamp"), PersistentDataType.INTEGER) - (int) (System.currentTimeMillis() / 1000L));
 
-            e.getPlayer().sendMessage(Component.text("You are muted for the next " + ((float) (timeRemaining/60)/60) + " hours, you cannot send messages.", TextColor.color(255, 0, 0), TextDecoration.BOLD));
+            e.getPlayer().sendMessage(Component.text("\nYou are muted for the next " + ((float) (timeRemaining/60)/60) + " hours, you cannot send messages.\n", NamedTextColor.RED, TextDecoration.BOLD));
         }
-        if(Boolean.TRUE.equals(e.getPlayer().getPersistentDataContainer().get(new NamespacedKey(VindicterraStaffUtils.getPlugin(), "isStaffChatEnabled"), PersistentDataType.BOOLEAN))){
+
+        String[] splitMessage = ((TextComponent) e.message()).content().split("", 2);
+
+        if(Boolean.TRUE.equals(e.getPlayer().getPersistentDataContainer().get(new NamespacedKey(VindicterraStaffUtils.getPlugin(), "isStaffChatEnabled"), PersistentDataType.BOOLEAN)) || splitMessage[0].equals("@")){
             if(e.message().equals(Component.text(" "))) return;
 
-            StaffChatCommand.sendStaffChatMessage(e.getPlayer(), ((TextComponent) e.message()).content());
+            String message = ((TextComponent) e.message()).content();
+
+            if(splitMessage[0].equals("@")){
+                message = message.replace("@", "");
+            }
+
+            StaffChatCommand.sendStaffChatMessage(e.getPlayer(), message);
 
             e.setCancelled(true);
         }
