@@ -20,7 +20,7 @@ public class FreezeCommand implements CommandExecutor {
             if(p.hasPermission("VSU.freeze")){
                 Player target = p.getServer().getPlayer(strings[0]);
 
-                if(target != null){
+                if(target == null){
                     p.sendMessage(Component.text("Player not found or not online", TextColor.color(255, 0, 0)));
                     return true;
                 }
@@ -35,6 +35,13 @@ public class FreezeCommand implements CommandExecutor {
     }
 
     public static void freezePlayer(Player p){
-        p.getPersistentDataContainer().set(new NamespacedKey(VindicterraStaffUtils.getPlugin(), "isFrozen"), PersistentDataType.BOOLEAN, true);
+        if(Boolean.TRUE.equals(p.getPersistentDataContainer().get(new NamespacedKey(VindicterraStaffUtils.getPlugin(), "isFrozen"), PersistentDataType.BOOLEAN))){
+            p.getPersistentDataContainer().set(new NamespacedKey(VindicterraStaffUtils.getPlugin(), "isFrozen"), PersistentDataType.BOOLEAN, false);
+            // TODO implement functionality
+        }
+        else {
+            p.getPersistentDataContainer().set(new NamespacedKey(VindicterraStaffUtils.getPlugin(), "isFrozen"), PersistentDataType.BOOLEAN, true);
+            // TODO implement functionality
+        }
     }
 }

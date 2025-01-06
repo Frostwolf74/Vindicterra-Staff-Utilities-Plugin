@@ -64,7 +64,7 @@ public class VanishCommand implements CommandExecutor {
 
     public static void vanishPlayer(Player p, Boolean unvanish){
         for(Player onlinePlayer : Bukkit.getOnlinePlayers()){
-            if(onlinePlayer.equals(p)){
+            if(onlinePlayer.equals(p) || onlinePlayer.hasPermission("VSU")){
                 continue;
             }
 

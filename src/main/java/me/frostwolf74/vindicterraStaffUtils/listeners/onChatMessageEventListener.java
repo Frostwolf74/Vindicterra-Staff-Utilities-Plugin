@@ -18,7 +18,7 @@ public class onChatMessageEventListener implements Listener {
             e.setCancelled(true);
             int timeRemaining = (e.getPlayer().getPersistentDataContainer().get(new NamespacedKey(VindicterraStaffUtils.getPlugin(), "unmuteTimeStamp"), PersistentDataType.INTEGER) - (int) (System.currentTimeMillis() / 1000L));
 
-            e.getPlayer().sendMessage(Component.text("You are muted for the next " + (timeRemaining/60)/60 + " hours, you cannot send messages.", TextColor.color(255, 0, 0), TextDecoration.BOLD));
+            e.getPlayer().sendMessage(Component.text("You are muted for the next " + ((float) (timeRemaining/60)/60) + " hours, you cannot send messages.", TextColor.color(255, 0, 0), TextDecoration.BOLD));
         }
     }
 }

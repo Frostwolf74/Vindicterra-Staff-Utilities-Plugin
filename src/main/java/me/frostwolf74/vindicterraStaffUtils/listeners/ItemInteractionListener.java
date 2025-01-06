@@ -68,7 +68,13 @@ public class ItemInteractionListener implements Listener {
                 Random rand = new Random();
                 rand.setSeed(System.currentTimeMillis());
 
-                e.getPlayer().teleport((Player) onlinePlayers.toArray()[rand.nextInt(onlinePlayers.size())]);
+                Player target = (Player) onlinePlayers.toArray()[rand.nextInt(onlinePlayers.size())];
+
+                if(target == e.getPlayer()) {
+                    target = (Player) onlinePlayers.toArray()[rand.nextInt(onlinePlayers.size())];
+                }
+
+                e.getPlayer().teleport(target);
             }
             else if(Objects.equals(e.getPlayer().getInventory().getItemInMainHand().getType(), Material.ENDER_EYE)){ // vanish
                 if(Boolean.TRUE.equals(e.getPlayer().getPersistentDataContainer().get(new NamespacedKey(VindicterraStaffUtils.getPlugin(), "isVanished"), PersistentDataType.BOOLEAN))){

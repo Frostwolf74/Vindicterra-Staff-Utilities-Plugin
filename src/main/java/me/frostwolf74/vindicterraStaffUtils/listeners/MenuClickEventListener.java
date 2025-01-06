@@ -32,7 +32,7 @@ public class MenuClickEventListener implements Listener {
 
                 TextComponent headName = (TextComponent) (e.getCurrentItem().getItemMeta().displayName());
 
-                openPlayerManagementInterface(e.getWhoClicked().getServer().getPlayer(headName.content())); // will never be null
+                openPlayerManagementInterface(p, e.getWhoClicked().getServer().getPlayer(headName.content())); // will never be null
             }
 
             if(e.getView().title().contains(Component.text("Manage"))){
@@ -66,10 +66,8 @@ public class MenuClickEventListener implements Listener {
         }
     }
 
-    private void openPlayerManagementInterface(Player p){
-        p.closeInventory();
-
-        Inventory inv = Bukkit.createInventory(p, 9*3, Component.text("Manage " + p.getName()));
+    private void openPlayerManagementInterface(Player p, Player target){
+        Inventory inv = Bukkit.createInventory(p, 9*3, Component.text("Manage " + target.getName()));
 
         ItemStack invSee = new ItemStack(Material.CHEST);
         invSee.setItemMeta(StaffModeCommand.applyDisplayName(invSee, Component.text("See Inventory", TextColor.color(175, 0,255))));
@@ -87,8 +85,8 @@ public class MenuClickEventListener implements Listener {
 
         SkullMeta playersHeadMeta = (SkullMeta) playerHead.getItemMeta();
 
-        playersHeadMeta.setOwningPlayer(p);
-        playersHeadMeta.displayName(Component.text(p.getName(), TextColor.color(255, 215, 0)));
+        playersHeadMeta.setOwningPlayer(target);
+        playersHeadMeta.displayName(Component.text(target.getName(), TextColor.color(255, 215, 0)));
         playersHeadMeta.lore(List.of(Component.text("Currently Managing", TextColor.color(175, 0, 255))));
         playerHead.setItemMeta(playersHeadMeta);
 

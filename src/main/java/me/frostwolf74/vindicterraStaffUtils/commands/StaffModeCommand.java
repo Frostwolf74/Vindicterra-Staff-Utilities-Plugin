@@ -34,6 +34,7 @@ public class StaffModeCommand implements CommandExecutor {
                     p.sendMessage(Component.text("Player not found or not online", TextColor.color(255, 0 , 0)));
                     return false;
                 }
+
                 return applyStaffMode(p.getServer().getPlayer(strings[0]));
             }
         }
@@ -48,6 +49,7 @@ public class StaffModeCommand implements CommandExecutor {
         if(Boolean.TRUE.equals(p.getPersistentDataContainer().get(new NamespacedKey(VindicterraStaffUtils.getPlugin(), "inStaffMode"), PersistentDataType.BOOLEAN))) {
             // key is disabled first as a failsafe
             p.getPersistentDataContainer().set(new NamespacedKey(VindicterraStaffUtils.getPlugin(), "inStaffMode"), PersistentDataType.BOOLEAN, false);
+            VanishCommand.vanishPlayer(p, true);
 
             p.getInventory().clear();
             ItemStack[] items = new ItemStack[41];
@@ -73,6 +75,8 @@ public class StaffModeCommand implements CommandExecutor {
         else{ // if player is not in staff mode
             PlayerInventory savedInventory = p.getInventory();
             List<ItemStack> items = new ArrayList<>();
+
+            VanishCommand.vanishPlayer(p, false);
 
             for(ItemStack e : savedInventory.getContents()){
                 if(e == null){
