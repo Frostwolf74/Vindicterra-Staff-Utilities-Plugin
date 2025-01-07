@@ -2,6 +2,7 @@ package me.frostwolf74.vindicterraStaffUtils;
 
 import me.frostwolf74.vindicterraStaffUtils.commands.*;
 import me.frostwolf74.vindicterraStaffUtils.listeners.*;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitTask;
@@ -12,7 +13,7 @@ public final class VindicterraStaffUtils extends JavaPlugin {
     private static VindicterraStaffUtils plugin;
     private static Map<UUID, BukkitTask> runningTasks = new HashMap<>(); // for hotbar text in staff mode
     private static Map<UUID, BukkitTask> runningPlayerMutedTasks = new HashMap<>(); // for muted players who leave and rejoin
-    private static Map<UUID, PlayerInventory> inventoryStates = new HashMap<>(); // for viewed inventories
+    private static Map<UUID, Inventory> openedInventories = new HashMap<>(); // for viewed inventories
 
 
     @Override
@@ -66,12 +67,12 @@ public final class VindicterraStaffUtils extends JavaPlugin {
         VindicterraStaffUtils.runningPlayerMutedTasks = runningPlayerMutedTasks;
     }
 
-    public static Map<UUID, PlayerInventory> getInventoryStates() {
-        return inventoryStates;
+    public static Map<UUID, Inventory> getopenedInventories() {
+        return openedInventories;
     }
 
-    public static void setInventoryStates(Map<UUID, PlayerInventory> inventoryStates) {
-        VindicterraStaffUtils.inventoryStates = inventoryStates;
+    public static void setOpenedInventories(Map<UUID, Inventory> openedInventories) {
+        VindicterraStaffUtils.openedInventories = openedInventories;
     }
 
 }

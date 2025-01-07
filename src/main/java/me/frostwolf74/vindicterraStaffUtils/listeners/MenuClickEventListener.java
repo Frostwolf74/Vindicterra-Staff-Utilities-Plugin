@@ -123,8 +123,8 @@ public class MenuClickEventListener implements Listener {
 
             if(e.getViewers().size() > 1){ // TODO debug
                 for(HumanEntity user : e.getViewers()){
-                    if(user instanceof Player){
-                        InventorySeeCommand.updatePlayerInventoryState(p);
+                    if(user instanceof Player viewer){
+                        InventorySeeCommand.openPlayerInventory(p, viewer);
                     }
                 }
             }

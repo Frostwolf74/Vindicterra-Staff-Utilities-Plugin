@@ -1,23 +1,25 @@
 package me.frostwolf74.vindicterraStaffUtils.commands;
 
-import me.frostwolf74.vindicterraStaffUtils.VindicterraStaffUtils;
 import net.kyori.adventure.text.Component;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.Inventory;
 
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Map;
-import java.util.UUID;
+import java.util.ArrayList;
+import java.util.List;
 
 public class InventorySeeCommand implements CommandExecutor {
+    private Gui inventoryViewGui;
+
     // TODO needs player-on-player testing
     @Override
     public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
@@ -30,35 +32,57 @@ public class InventorySeeCommand implements CommandExecutor {
                 p.sendMessage(Component.text("Player not found or not online"));
             }
 
-            openPlayerInventory(p, p.getServer().getPlayer(strings[0]));
+            return openPlayerInventory(p, p.getServer().getPlayer(strings[0]));
         }
         return false;
     }
 
-    public static void openPlayerInventory(Player p, Player target) {
-        Inventory targetInventory = Bukkit.createInventory(p, 9 * 6, "Inventory: " + target.getName());
+    public static boolean openPlayerInventory(Player p, Player target) {
+        PlayerInventory ti = target.getInventory();
 
-        targetInventory.setContents(target.getInventory().getContents());
+//        "! ! ! ! @ $ $ $ $", <- armor slots + offhand + crafting matrix
+//        "# # # # # # # # #", <- storage slots
+//        "# # # # # # # # #",
+//        "# # # # # # # # #",
+//        "% % % % % % % % %", <- hotbar slots
+//        "& & & < & > & & &"  <- page selector (inventory <-> ender chest)
 
-        p.openInventory(targetInventory);
-    }
+        Inventory inv = Bukkit.createInventory(null, 9*6);
 
-    public static void updatePlayerInventoryState(Player p) {
-        Inventory inventory = p.getInventory();
-        ItemStack[] contents = inventory.getContents();
-        ItemStack[] armorContents = p.getInventory().getArmorContents();
+        List<ItemStack> itemList = new ArrayList<>();
 
-        ItemStack[] craftingItems = new ItemStack[4];
+        itemList.add(0, ti.getItem(103)); // armour slots
+        itemList.add(1, ti.getItem(102));
+        itemList.add(2, ti.getItem(101));
+        itemList.add(3, ti.getItem(100));
+        itemList.add(4, ti.getItem(40)); // off-hand
+        itemList.add(5, ti.getItem(80)); // crafting grid
+        itemList.add(6, ti.getItem(81));
+        itemList.add(7, ti.getItem(82));
+        itemList.add(8, ti.getItem(83));
 
-        for(int i = 0; i < 4; i++) {
-            craftingItems[i] = inventory.getItem(i);
+        int index1 = 9;
+        int index2 = 36;
+
+        for(int i = 9; i < 35; i++){
+            itemList.add(index1, nullSlotItemCheck(ti, i)); // storage slots
+            ++index1;
+        }
+        itemList.add(35, new ItemStack(Material.BLACK_STAINED_GLASS_PANE));
+        for(int i = 0; i < 8; i++){
+            itemList.add(index2, nullSlotItemCheck(ti, i));
+            ++index2;
         }
 
-//        PlayerInventory state = new PlayerInventory(contents, armorContents, craftingItems);
+        itemList.forEach(inv::addItem);
 
-        Map<UUID, PlayerInventory>  inventoryStates = VindicterraStaffUtils.getInventoryStates();
-//        inventoryStates.put(p.getUniqueId(), state);
+        p.openInventory(inv);
 
-        VindicterraStaffUtils.setInventoryStates(inventoryStates);
+        return true;
+    }
+
+    public static ItemStack nullSlotItemCheck(PlayerInventory in, int slotIndex){
+        if(in.getItem(slotIndex) == null) return new ItemStack(Material.AIR);
+        else return in.getItem(slotIndex);
     }
 }
