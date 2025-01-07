@@ -3,7 +3,6 @@ package me.frostwolf74.vindicterraStaffUtils;
 import me.frostwolf74.vindicterraStaffUtils.commands.*;
 import me.frostwolf74.vindicterraStaffUtils.listeners.*;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitTask;
 
@@ -40,6 +39,7 @@ public final class VindicterraStaffUtils extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new onPlayerJoinEventListener(), this);
         getServer().getPluginManager().registerEvents(new PlayerDamageEntityEventListener(), this);
         getServer().getPluginManager().registerEvents(new onPlayerMoveEventListener(), this);
+        getServer().getPluginManager().registerEvents(new onInventoryCloseEventListener(), this);
     }
 
     @Override

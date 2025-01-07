@@ -25,12 +25,20 @@ import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.persistence.PersistentDataType;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.UUID;
 
 public class MenuClickEventListener implements Listener {
     @EventHandler
     public void onInventoryClick(InventoryClickEvent e) {
         if(e.getWhoClicked() instanceof Player p) {
+            if(VindicterraStaffUtils.getopenedInventories().containsKey(p.getUniqueId())) {
+                Map<UUID, Inventory> openedInventories = VindicterraStaffUtils.getopenedInventories();
+
+                openedInventories.put(p.getUniqueId(), InventorySeeCommand.updatePlayerInventory(p));
+            }
+
             if(e.getView().title().equals(Component.text("Online Players"))){
                 e.setCancelled(true);
 

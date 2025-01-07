@@ -1,9 +1,11 @@
 package me.frostwolf74.vindicterraStaffUtils.commands;
 
+import me.frostwolf74.vindicterraStaffUtils.VindicterraStaffUtils;
 import net.kyori.adventure.text.Component;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -11,15 +13,12 @@ import org.bukkit.entity.Player;
 
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.PlayerInventory;
+import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class InventorySeeCommand implements CommandExecutor {
-    private Gui inventoryViewGui;
-
     // TODO needs player-on-player testing
     @Override
     public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
@@ -38,8 +37,28 @@ public class InventorySeeCommand implements CommandExecutor {
     }
 
     public static boolean openPlayerInventory(Player p, Player target) {
-        PlayerInventory ti = target.getInventory();
+        Inventory inv = updatePlayerInventory(target);
 
+        p.openInventory(inv);
+
+        p.getPersistentDataContainer().set(new NamespacedKey(VindicterraStaffUtils.getPlugin(), "viewingInventory"), PersistentDataType.BOOLEAN, true);
+
+        Map<UUID, Inventory> inventoryMap = VindicterraStaffUtils.getopenedInventories();
+        inventoryMap.put(target.getUniqueId(), inv);
+
+        VindicterraStaffUtils.setOpenedInventories(inventoryMap);
+
+        return true;
+    }
+
+    public static Inventory updatePlayerInventory(Player target) {
+        ItemStack[] ti = target.getInventory().getContents();
+
+        Inventory inv = Bukkit.createInventory(null, 9*6);
+
+        inv.setContents(ti);
+
+//        should look like this
 //        "! ! ! ! @ $ $ $ $", <- armor slots + offhand + crafting matrix
 //        "# # # # # # # # #", <- storage slots
 //        "# # # # # # # # #",
@@ -47,42 +66,54 @@ public class InventorySeeCommand implements CommandExecutor {
 //        "% % % % % % % % %", <- hotbar slots
 //        "& & & < & > & & &"  <- page selector (inventory <-> ender chest)
 
-        Inventory inv = Bukkit.createInventory(null, 9*6);
 
-        List<ItemStack> itemList = new ArrayList<>();
+//        looks like this when taken directly from Inventory#contents()
+//        "% % % % % % % % %", <- hotbar slots
+//        "# # # # # # # # #", <- storage slots
+//        "# # # # # # # # #",
+//        "# # # # # # # # #",
+//        "! ! ! ! @ $ $ $ $", <- armor slots + offhand + crafting matrix
 
-        itemList.add(0, ti.getItem(103)); // armour slots
-        itemList.add(1, ti.getItem(102));
-        itemList.add(2, ti.getItem(101));
-        itemList.add(3, ti.getItem(100));
-        itemList.add(4, ti.getItem(40)); // off-hand
-        itemList.add(5, ti.getItem(80)); // crafting grid
-        itemList.add(6, ti.getItem(81));
-        itemList.add(7, ti.getItem(82));
-        itemList.add(8, ti.getItem(83));
+        ItemStack[] hotBarSlots = new ItemStack[10]; // swapping placement to reflect real inventory
+        ItemStack[] armorAndOffhandSlots = new ItemStack[10];
 
-        int index1 = 9;
-        int index2 = 36;
+        inv.addItem(new ItemStack(Material.AIR)); // extending the length at the end
+        inv.addItem(new ItemStack(Material.AIR));
+        inv.addItem(new ItemStack(Material.AIR));
+        inv.addItem(new ItemStack(Material.AIR));
 
-        for(int i = 9; i < 35; i++){
-            itemList.add(index1, nullSlotItemCheck(ti, i)); // storage slots
-            ++index1;
-        }
-        itemList.add(35, new ItemStack(Material.BLACK_STAINED_GLASS_PANE));
-        for(int i = 0; i < 8; i++){
-            itemList.add(index2, nullSlotItemCheck(ti, i));
-            ++index2;
+        for(int i = 0; i < 9; ++i){ //
+            hotBarSlots[i] = nullItemCheck(inv.getItem(i));
         }
 
-        itemList.forEach(inv::addItem);
+        int j = -1;
+        for(int i = 36; i < 44; ++i){
+            if(i > 41){
+                armorAndOffhandSlots[++j] = new ItemStack(Material.AIR);
+            }
+            else {
+                armorAndOffhandSlots[++j] = nullItemCheck(inv.getItem(i));
+            }
+        }
 
-        p.openInventory(inv);
+        for(int i = 0; i < 9; ++i){
+            inv.setItem(i, armorAndOffhandSlots[i]);
+        }
 
-        return true;
+        int k = -1;
+        for(int i = 36; i < 45; i++){
+            inv.setItem(i, hotBarSlots[++k]);
+        }
+
+        for(int i = 46; i < 54; ++i){
+            inv.addItem(new ItemStack(Material.AIR));
+        }
+
+        return inv;
     }
 
-    public static ItemStack nullSlotItemCheck(PlayerInventory in, int slotIndex){
-        if(in.getItem(slotIndex) == null) return new ItemStack(Material.AIR);
-        else return in.getItem(slotIndex);
+    public static ItemStack nullItemCheck(ItemStack item){
+        if(item == null) return new ItemStack(Material.AIR);
+        else return item;
     }
 }
