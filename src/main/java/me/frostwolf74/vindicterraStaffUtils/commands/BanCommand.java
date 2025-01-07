@@ -4,9 +4,7 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.BanList;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.CommandSender;
+import org.bukkit.command.*;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
@@ -15,7 +13,7 @@ import java.util.Calendar;
 import java.util.List;
 
 
-public class BanCommand implements CommandExecutor {
+public class BanCommand implements CommandExecutor{
     @Override
     public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
         if(commandSender instanceof Player p) {
@@ -70,19 +68,19 @@ public class BanCommand implements CommandExecutor {
 
             switch (timeType) {
                 case "h":
-                    banLengthS = Math.round(timeLimit * 60);
+                    banLengthS = Math.round(timeLimit * 60 * 60);
                     break;
                 case "d":
-                    banLengthS = Math.round(timeLimit * 86400);
+                    banLengthS = Math.round(timeLimit * 60 * 60 * 24);
                     break;
                 case "w":
-                    banLengthS = Math.round(timeLimit * 604800);
+                    banLengthS = Math.round(timeLimit * 60 * 60 * 24 * 7);
                     break;
                 case "m":
-                    banLengthS = Math.round(timeLimit * 2592000);
+                    banLengthS = Math.round(timeLimit * 60 * 60 * 24 * 30);
                     break;
                 case "y":
-                    banLengthS = Math.round(timeLimit * 2592000 * 12);
+                    banLengthS = Math.round(timeLimit * 60 * 60 * 24 * 30 * 12);
                     break;
                 default:
                     p.sendMessage(Component.text("Invalid time type: " + timeType, NamedTextColor.RED));

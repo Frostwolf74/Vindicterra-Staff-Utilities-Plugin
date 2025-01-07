@@ -76,6 +76,8 @@ public class VanishCommand implements CommandExecutor {
             }
         }
 
+        p.getPersistentDataContainer().set(new NamespacedKey(VindicterraStaffUtils.getPlugin(), "isVanished"), PersistentDataType.BOOLEAN, !unvanish);
+
         if(unvanish){
             p.sendMessage(Component.text("You are now visible."));
 
@@ -91,7 +93,5 @@ public class VanishCommand implements CommandExecutor {
 
             VindicterraStaffUtils.getRunningTasks().put(p.getUniqueId(), actionBarTask);
         }
-
-        p.getPersistentDataContainer().set(new NamespacedKey(VindicterraStaffUtils.getPlugin(), "isVanished"), PersistentDataType.BOOLEAN, !unvanish);
     }
 }

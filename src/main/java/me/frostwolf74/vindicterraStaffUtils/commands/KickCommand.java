@@ -17,7 +17,7 @@ public class KickCommand implements CommandExecutor {
 
             Player target = p.getServer().getPlayer(strings[0]);
 
-            if(target != null){
+            if(target == null){
                 p.sendMessage(Component.text("Player not found or not online", NamedTextColor.RED));
                 return true;
             }
@@ -25,7 +25,7 @@ public class KickCommand implements CommandExecutor {
             StringBuilder reason = new StringBuilder("\nYou have been kicked for: ");
 
             for (int i = 1; i < strings.length; i++) {
-                reason.append(strings[i]);
+                reason.append(strings[i]).append(" ");
             }
 
             target.kick(Component.text(reason + "\n", NamedTextColor.RED));

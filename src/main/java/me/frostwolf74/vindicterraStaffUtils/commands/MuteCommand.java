@@ -11,11 +11,13 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabExecutor;
 import org.bukkit.entity.Player;
 
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.scheduler.BukkitTask;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
@@ -75,19 +77,19 @@ public class MuteCommand implements CommandExecutor {
 
             switch (timeType) {
                 case "h":
-                    muteLengthS = Math.round(timeLimit * 60);
+                    muteLengthS = Math.round(timeLimit * 60 * 60);
                     break;
                 case "d":
-                    muteLengthS = Math.round(timeLimit * 86400);
+                    muteLengthS = Math.round(timeLimit * 60 * 60 * 24);
                     break;
                 case "w":
-                    muteLengthS = Math.round(timeLimit * 604800);
+                    muteLengthS = Math.round(timeLimit * 60 * 60 * 24 * 7);
                     break;
                 case "m":
-                    muteLengthS = Math.round(timeLimit * 2592000);
+                    muteLengthS = Math.round(timeLimit * 60 * 60 * 24 * 30);
                     break;
                 case "y":
-                    muteLengthS = Math.round(timeLimit * 2592000 * 12);
+                    muteLengthS = Math.round(timeLimit * 60 * 60 * 24 * 30 * 12);
                     break;
                 default:
                     p.sendMessage(Component.text("Invalid time type: " + timeType, NamedTextColor.RED));
