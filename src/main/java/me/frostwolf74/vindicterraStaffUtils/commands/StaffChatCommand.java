@@ -4,20 +4,17 @@ import me.frostwolf74.vindicterraStaffUtils.VindicterraStaffUtils;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.persistence.PersistentDataType;
-import org.bukkit.scoreboard.Team;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
+
 
 public class StaffChatCommand implements CommandExecutor {
     @Override
@@ -56,19 +53,24 @@ public class StaffChatCommand implements CommandExecutor {
         }
     }
 
-    private static String getPlayerTeamColor(Player player) { // +++ created entirely by chatGPT
-        if (player.getScoreboard() != null) {
-            Team team = player.getScoreboard().getEntryTeam(player.getName());
-            if (team != null && team.getColor() != null) {
-                return team.getColor().toString();
-            }
-        }
-        return ChatColor.WHITE.toString(); // Default to white if no team or color
+//    private static String getPlayerTeamColor(Player player) { // for vanilla teams
+//        if (player.getScoreboard() != null) {
+//            Team team = player.getScoreboard().getEntryTeam(player.getName());
+//            if (team != null && team.getColor() != null) {
+//                return team.getColor().toString();
+//            }
+//        }
+//        return ChatColor.WHITE.toString(); // Default to white if no team or color
+//    }
+
+    public static String getPlayerNameColor(Player p){
+//        Node node = Node.builder().
+        return "";
     }
 
     public static void sendStaffChatMessage(Player p, String messageRaw) {
         for(Player p1 : p.getServer().getOnlinePlayers()) {
-            String teamColor = getPlayerTeamColor(p);
+            String teamColor = getPlayerNameColor(p);
             String formattedName = teamColor + p.getName();
 
             List<Component> components = new ArrayList<>();
@@ -79,7 +81,7 @@ public class StaffChatCommand implements CommandExecutor {
             components.add(3, Component.text(" (" + p.getServer().getName() + ") ", TextColor.color(192, 192, 192)));
             components.add(4, Component.text(formattedName));
             components.add(5, Component.text(": ", TextColor.color(192, 192, 192)));
-            components.add(6, Component.text(messageRaw.toString(), TextColor.color(192, 192, 192)));
+            components.add(6, Component.text(messageRaw, TextColor.color(192, 192, 192)));
 
             Component message = Component.text("");
             for (Component component : components) {

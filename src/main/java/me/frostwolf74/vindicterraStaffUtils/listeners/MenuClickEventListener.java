@@ -2,7 +2,6 @@ package me.frostwolf74.vindicterraStaffUtils.listeners;
 
 import me.frostwolf74.vindicterraStaffUtils.VindicterraStaffUtils;
 import me.frostwolf74.vindicterraStaffUtils.commands.BanCommand;
-import me.frostwolf74.vindicterraStaffUtils.commands.InventorySeeCommand;
 import me.frostwolf74.vindicterraStaffUtils.commands.MuteCommand;
 import me.frostwolf74.vindicterraStaffUtils.commands.StaffModeCommand;
 
@@ -13,10 +12,9 @@ import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
-import org.bukkit.block.sign.*;
-import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
@@ -24,21 +22,12 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.persistence.PersistentDataType;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 
 public class MenuClickEventListener implements Listener {
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onInventoryClick(InventoryClickEvent e) {
         if(e.getWhoClicked() instanceof Player p) {
-            if(VindicterraStaffUtils.getopenedInventories().containsKey(p.getUniqueId())) {
-                Map<UUID, Inventory> openedInventories = VindicterraStaffUtils.getopenedInventories();
-
-                openedInventories.put(p.getUniqueId(), InventorySeeCommand.updatePlayerInventory(p));
-            }
-
             if(e.getView().title().equals(Component.text("Online Players"))){
                 e.setCancelled(true);
 
@@ -50,6 +39,8 @@ public class MenuClickEventListener implements Listener {
             if(e.getView().getOriginalTitle().equalsIgnoreCase("Managing Player")){
                 e.setCancelled(true);
 
+                if(e.getCurrentItem() == null) return;
+
                 Player target = null;
 
                 for(ItemStack item : e.getView().getTopInventory().getContents()){
@@ -57,7 +48,7 @@ public class MenuClickEventListener implements Listener {
                         item = new ItemStack(Material.AIR);
                     }
 
-                    if(item.getType() == Material.PLAYER_HEAD){ // looks for the named player head and gets the player
+                    if(item.getType() == Material.PLAYER_HEAD){ // looks for the named player head contained in the inventory and gets the player object from it
                         target = p.getServer().getPlayer(((TextComponent) Objects.requireNonNull(item.getItemMeta().displayName())).content());
                     }
                 }
@@ -65,10 +56,10 @@ public class MenuClickEventListener implements Listener {
                 assert target != null;
                 switch(Objects.requireNonNull(e.getCurrentItem()).getType()){
                     case CHEST:
-                        // TODO
+                        p.getServer().dispatchCommand(p, "inv " + target);
                         break;
                     case ENDER_CHEST:
-                        p.openInventory(target.getEnderChest());
+                        p.getServer().dispatchCommand(p, "ender " + target);
                         break;
                     case BARRIER:
                         openPlayerPunishmentInterface(p, target);
@@ -82,6 +73,8 @@ public class MenuClickEventListener implements Listener {
             if(e.getView().getOriginalTitle().equalsIgnoreCase("Managing Player Punishments")){
                 e.setCancelled(true);
 
+                if(e.getCurrentItem() == null) return;
+
                 Player target = null;
 
                 for(ItemStack item : e.getView().getTopInventory().getContents()){
@@ -95,45 +88,25 @@ public class MenuClickEventListener implements Listener {
                 }
 
                 assert target != null;
-                switch(Objects.requireNonNull(e.getCurrentItem()).getType()){
+                switch(e.getCurrentItem().getType()){ // TODO
                     case WHITE_WOOL:
-                        p.getPersistentDataContainer().set(new NamespacedKey(VindicterraStaffUtils.getPlugin(), "awaitingInput"), PersistentDataType.STRING, "kick");
-
-                        target.kick(Component.text(openVirtualReasonSign(p)));
+                        target.kick(Component.text(openVirtualAnvil(p)));
                         break;
                     case ORANGE_WOOL:
-                        p.getPersistentDataContainer().set(new NamespacedKey(VindicterraStaffUtils.getPlugin(), "awaitingInput"), PersistentDataType.STRING, "mute:duration");
+                        String[] s = new String[2];
+                        s[1] = openVirtualAnvil(p);
 
-                        String timeLimit = openVirtualTimeLimitSign(p);
-                        String[] reason = new String[2];
-
-                        reason[0] = timeLimit;
-                        reason[1] = openVirtualReasonSign(p);
-
-                        MuteCommand.mutePlayer(target, reason);
+                        MuteCommand.mutePlayer(target, s);
                         break;
                     case RED_WOOL:
-                        p.getPersistentDataContainer().set(new NamespacedKey(VindicterraStaffUtils.getPlugin(), "awaitingInput"), PersistentDataType.STRING, "ban:duration");
+                        String[] s1 = new String[2];
+                        s1[1] = openVirtualAnvil(p);
 
-                        String timeLimit1 = openVirtualTimeLimitSign(p);
-                        String[] reason1 = new String[2];
-
-                        reason1[0] = timeLimit1;
-                        reason1[1] = openVirtualReasonSign(p);
-
-                        BanCommand.banPlayer(p, p.getServer().getOfflinePlayer(target.name().toString()), reason1);
+                        BanCommand.banPlayer(p, p.getServer().getOfflinePlayer(target.name().toString()), s1);
 
                         p.sendMessage("Found offline player, name: " + p.getServer().getOfflinePlayer(target.name().toString()).getName());
                         p.sendMessage(Component.text("Original string: " + target.name().toString()));
                         break;
-                }
-            }
-
-            if(e.getViewers().size() > 1){ // TODO debug
-                for(HumanEntity user : e.getViewers()){
-                    if(user instanceof Player viewer){
-                        InventorySeeCommand.openPlayerInventory(p, viewer);
-                    }
                 }
             }
 
@@ -146,26 +119,8 @@ public class MenuClickEventListener implements Listener {
         }
     }
 
-    public String openVirtualTimeLimitSign(Player player) {
-        org.bukkit.block.Sign sign = (org.bukkit.block.Sign) Material.OAK_SIGN.createBlockData();
-
-        sign.getSide(Side.FRONT).line(0, Component.text("Time Limit (ex: 3d):"));
-        sign.setEditable(true);
-
-        player.openSign(sign, Side.FRONT);
-
-        return sign.getBlockData().getAsString();
-    }
-
-    public String openVirtualReasonSign(Player player) {
-        org.bukkit.block.Sign sign = (org.bukkit.block.Sign) Material.OAK_SIGN.createBlockData(); // sign builder? TODO debug
-
-        sign.getSide(Side.FRONT).line(0, Component.text("Reason:"));
-        sign.setEditable(true);
-
-        player.openSign(sign, Side.FRONT);
-
-        return sign.getBlockData().getAsString();
+    public static String openVirtualAnvil(Player target){
+        return target.getName();
     }
 
     public void openPlayerPunishmentInterface(Player p, Player target) {

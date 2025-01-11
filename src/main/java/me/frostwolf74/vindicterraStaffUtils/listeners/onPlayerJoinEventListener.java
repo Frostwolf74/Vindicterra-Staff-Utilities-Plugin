@@ -2,9 +2,9 @@ package me.frostwolf74.vindicterraStaffUtils.listeners;
 
 import me.frostwolf74.vindicterraStaffUtils.VindicterraStaffUtils;
 
-import me.frostwolf74.vindicterraStaffUtils.commands.StaffModeCommand;
 import org.bukkit.NamespacedKey;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.persistence.PersistentDataType;
@@ -16,7 +16,7 @@ import java.util.UUID;
 
 
 public class onPlayerJoinEventListener implements Listener {
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOWEST)
     public static void onJoinEvent(PlayerJoinEvent e){
         if(Boolean.TRUE.equals(e.getPlayer().getPersistentDataContainer().get(new NamespacedKey(VindicterraStaffUtils.getPlugin(), "isMuted"), PersistentDataType.BOOLEAN))){ // ensure players who leave tempmuted dont stay permanently muted
             int unMuteTimeStamp = e.getPlayer().getPersistentDataContainer().get(new NamespacedKey(VindicterraStaffUtils.getPlugin(), "unmuteTimeStamp"), PersistentDataType.INTEGER);
@@ -34,8 +34,8 @@ public class onPlayerJoinEventListener implements Listener {
         }
 
         // problems with keeping the hotbar bukkit task working, vanish is disabled on exit, however, staffmode remains
-        if(Boolean.TRUE.equals(e.getPlayer().getPersistentDataContainer().get(new NamespacedKey(VindicterraStaffUtils.getPlugin(), "inStaffMode"), PersistentDataType.BOOLEAN))){
-            e.getPlayer().getPersistentDataContainer().set(new NamespacedKey(VindicterraStaffUtils.getPlugin(), "inStaffMode"), PersistentDataType.BOOLEAN, false);
+        if(Boolean.TRUE.equals(e.getPlayer().getPersistentDataContainer().get(new NamespacedKey(VindicterraStaffUtils.getPlugin(), "isVanished"), PersistentDataType.BOOLEAN))){
+            e.getPlayer().getPersistentDataContainer().set(new NamespacedKey(VindicterraStaffUtils.getPlugin(), "inVanished"), PersistentDataType.BOOLEAN, false);
         }
 
         if(Boolean.TRUE.equals(e.getPlayer().getPersistentDataContainer().get(new NamespacedKey(VindicterraStaffUtils.getPlugin(), "isStaffChatEnabled"), PersistentDataType.BOOLEAN))){ // disable staff chat on leave

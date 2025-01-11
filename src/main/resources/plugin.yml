@@ -87,8 +87,6 @@ permissions:
         default: false
       VSU.punish.mute:
         default: false
-      VSU.punish.unmute:
-        default: false
       VSU.punish.kick:
         default: false
       VSU.punish.ban:
