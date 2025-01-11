@@ -2,7 +2,6 @@ package me.frostwolf74.vindicterraStaffUtils.listeners;
 
 import me.frostwolf74.vindicterraStaffUtils.VindicterraStaffUtils;
 import me.frostwolf74.vindicterraStaffUtils.commands.FreezeCommand;
-import me.frostwolf74.vindicterraStaffUtils.commands.InventorySeeCommand;
 import me.frostwolf74.vindicterraStaffUtils.commands.VanishCommand;
 
 import net.kyori.adventure.text.Component;
@@ -93,7 +92,7 @@ public class ItemInteractionListener implements Listener {
 
                 if(!(trace == null)){
                     if(trace.getHitEntity() instanceof Player target){
-                        InventorySeeCommand.openPlayerInventory(e.getPlayer(), target);
+
                     }
                 }
             }

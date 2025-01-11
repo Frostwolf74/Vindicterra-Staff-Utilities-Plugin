@@ -9,12 +9,13 @@ import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.NamespacedKey;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.persistence.PersistentDataType;
 
 
 public class onChatMessageEventListener implements Listener {
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onChat(AsyncChatEvent e) {
         if(Boolean.TRUE.equals(e.getPlayer().getPersistentDataContainer().get(new NamespacedKey(VindicterraStaffUtils.getPlugin(), "isMuted"), PersistentDataType.BOOLEAN))){
             e.setCancelled(true);
@@ -25,7 +26,7 @@ public class onChatMessageEventListener implements Listener {
 
         String[] splitMessage = ((TextComponent) e.message()).content().split("", 2);
 
-        if(Boolean.TRUE.equals(e.getPlayer().getPersistentDataContainer().get(new NamespacedKey(VindicterraStaffUtils.getPlugin(), "isStaffChatEnabled"), PersistentDataType.BOOLEAN)) || splitMessage[0].equals("@")){
+        if(Boolean.TRUE.equals(e.getPlayer().getPersistentDataContainer().get(new NamespacedKey(VindicterraStaffUtils.getPlugin(), "isStaffChatEnabled"), PersistentDataType.BOOLEAN)) || (splitMessage[0].equals("@") && e.getPlayer().hasPermission("VSU"))){
             if(e.message().equals(Component.text(" "))) return;
 
             String message = ((TextComponent) e.message()).content();
