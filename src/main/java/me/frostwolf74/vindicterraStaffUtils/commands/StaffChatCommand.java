@@ -78,7 +78,7 @@ public class StaffChatCommand implements CommandExecutor {
             components.add(0, Component.text("[", TextColor.color(192, 192, 192)));
             components.add(1, Component.text("Staff", TextColor.color(96, 96, 255)));
             components.add(2, Component.text("]", TextColor.color(192, 192, 192)));
-            components.add(3, Component.text(" (" + p.getServer().getName() + ") ", TextColor.color(192, 192, 192)));
+            components.add(3, Component.text(" (" + p.getWorld().getName() + ") ", TextColor.color(192, 192, 192)));
             components.add(4, Component.text(formattedName));
             components.add(5, Component.text(": ", TextColor.color(192, 192, 192)));
             components.add(6, Component.text(messageRaw, TextColor.color(192, 192, 192)));

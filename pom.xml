@@ -6,7 +6,7 @@
 
     <groupId>me.frostwolf74</groupId>
     <artifactId>VindicterraStaffUtils</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0</version>
     <packaging>jar</packaging>
 
     <name>VindicterraStaffUtils</name>

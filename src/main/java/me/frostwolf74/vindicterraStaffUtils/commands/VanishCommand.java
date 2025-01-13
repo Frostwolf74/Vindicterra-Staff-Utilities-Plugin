@@ -89,7 +89,7 @@ public class VanishCommand implements CommandExecutor {
 
             BukkitTask actionBarTask = p.getServer().getScheduler().runTaskTimer(VindicterraStaffUtils.getPlugin(), () -> { // keeps action bar text above hotbar (typically disappears after 3 secs otherwise)
                 p.sendActionBar(Component.text("Vanished", TextColor.color(96, 96, 96)));
-            }, 0L, 40L); // updates every 2 secs
+            }, 0L, 30L); // updates every 1.5 secs
 
             VindicterraStaffUtils.getRunningTasks().put(p.getUniqueId(), actionBarTask);
         }

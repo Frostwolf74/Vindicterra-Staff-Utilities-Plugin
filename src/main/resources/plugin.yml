@@ -1,6 +1,6 @@
 name: VindicterraStaffUtils
 Author: Frostwolf74
-version: '1.0-SNAPSHOT'
+version: '1.0'
 main: me.frostwolf74.vindicterraStaffUtils.VindicterraStaffUtils
 api-version: '1.20'
 
