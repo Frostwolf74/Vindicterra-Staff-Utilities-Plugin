@@ -59,6 +59,8 @@ public class VanishCommand implements CommandExecutor {
     }
 
     public static void vanishPlayer(Player p, Boolean unvanish){
+        p.getPersistentDataContainer().set(new NamespacedKey(VindicterraStaffUtils.getPlugin(), "isVanished"), PersistentDataType.BOOLEAN, !unvanish);
+
         for(Player onlinePlayer : p.getServer().getOnlinePlayers()){
             if(onlinePlayer.equals(p) || (onlinePlayer.hasPermission("VSU") && !unvanish)){ // prevents self and other staff from being invisible
                 continue;
@@ -71,8 +73,6 @@ public class VanishCommand implements CommandExecutor {
                 onlinePlayer.hidePlayer(VindicterraStaffUtils.getPlugin(), p);
             }
         }
-
-        p.getPersistentDataContainer().set(new NamespacedKey(VindicterraStaffUtils.getPlugin(), "isVanished"), PersistentDataType.BOOLEAN, !unvanish);
 
         if(unvanish){
             p.sendMessage(Component.text("You are now visible."));

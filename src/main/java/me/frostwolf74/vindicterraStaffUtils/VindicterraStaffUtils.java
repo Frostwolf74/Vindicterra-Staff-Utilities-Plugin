@@ -2,7 +2,9 @@ package me.frostwolf74.vindicterraStaffUtils;
 
 import me.frostwolf74.vindicterraStaffUtils.commands.*;
 import me.frostwolf74.vindicterraStaffUtils.listeners.*;
+import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextFormat;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitTask;
@@ -34,6 +36,7 @@ public final class VindicterraStaffUtils extends JavaPlugin {
                                             "                                | |_) | | |_| |   |  _|   | |    | (_) | \\__ \\ | |_   \\ V  V /  | (_) | | | |  _|   / /   |__   _|\n" +
                                             "                                |_.__/   \\__, |   |_|     |_|     \\___/  |___/  \\__|   \\_/\\_/    \\___/  |_| |_|    /_/       |_|  \n" +
                                             "                                        |___/                                                                                          \n\n"); // enormous on-enable message because why not
+
 
         getCommand("staff").setExecutor(new StaffModeCommand());
         getCommand("staffchat").setExecutor(new StaffChatCommand());

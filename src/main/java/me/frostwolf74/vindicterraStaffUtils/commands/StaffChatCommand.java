@@ -29,11 +29,9 @@ public class StaffChatCommand implements CommandExecutor {
                 return true;
             }
 
-            for(int i = 0; i < strings.length; i++){
-                messageRaw.append(strings[i]).append(" ");
+            for (String string : strings) {
+                messageRaw.append(string).append(" ");
             }
-
-            if(messageRaw.equals(" ")) return false;
 
             sendStaffChatMessage(p, messageRaw.toString());
 
@@ -63,15 +61,14 @@ public class StaffChatCommand implements CommandExecutor {
 //        return ChatColor.WHITE.toString(); // Default to white if no team or color
 //    }
 
-    public static String getPlayerNameColor(Player p){
+    public static String getPlayerFormattedName(Player p){
 //        Node node = Node.builder().
-        return "";
+        return p.getDisplayName();
     }
 
     public static void sendStaffChatMessage(Player p, String messageRaw) {
         for(Player p1 : p.getServer().getOnlinePlayers()) {
-            String teamColor = getPlayerNameColor(p);
-            String formattedName = teamColor + p.getName();
+            String formattedName = getPlayerFormattedName(p);
 
             List<Component> components = new ArrayList<>();
 

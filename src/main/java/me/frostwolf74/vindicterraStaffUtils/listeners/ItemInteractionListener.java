@@ -71,7 +71,8 @@ public class ItemInteractionListener implements Listener {
 
                 Player target = (Player) onlinePlayers.toArray()[rand.nextInt(onlinePlayers.size())];
 
-                if(target == e.getPlayer()) {
+                // prevents rtps to other staff members
+                if(target == e.getPlayer() && !target.hasPermission("VSU")) {
                     target = (Player) onlinePlayers.toArray()[rand.nextInt(onlinePlayers.size())];
                 }
 
