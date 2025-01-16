@@ -28,12 +28,12 @@ public class MenuClickEventListener implements Listener {
     @EventHandler(priority = EventPriority.LOWEST)
     public void onInventoryClick(InventoryClickEvent e) {
         if(e.getWhoClicked() instanceof Player p) {
-            if(e.getView().title().equals(Component.text("Online Players"))){
+            if(e.getView().title().equals(Component.text("Online Players"))){ // inside the online players menu
                 e.setCancelled(true);
 
-                TextComponent headName = (TextComponent) (e.getCurrentItem().getItemMeta().displayName());
+                TextComponent headName = (TextComponent) (e.getCurrentItem().getItemMeta().displayName()); // retrieve player info from clicked head
 
-                openPlayerManagementInterface(p, e.getWhoClicked().getServer().getPlayer(headName.content())); // will never be null
+                openPlayerManagementInterface(p, e.getWhoClicked().getServer().getPlayer(headName.content())); // apply player info for next window
             }
 
             if(e.getView().getOriginalTitle().equalsIgnoreCase("Managing Player")){
@@ -41,7 +41,7 @@ public class MenuClickEventListener implements Listener {
 
                 if(e.getCurrentItem() == null) return;
 
-                Player target = null;
+                Player target = null; // defined later
 
                 for(ItemStack item : e.getView().getTopInventory().getContents()){
                     if(item == null){ // skip over empty slots
@@ -120,8 +120,11 @@ public class MenuClickEventListener implements Listener {
     }
 
     public static String openVirtualAnvil(Player target){
+
         return target.getName();
     }
+
+    // creates each inventory interface
 
     public void openPlayerPunishmentInterface(Player p, Player target) {
         Inventory inv = Bukkit.createInventory(p, 9*3, Component.text("Managing Player Punishments"));

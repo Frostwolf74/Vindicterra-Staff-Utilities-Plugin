@@ -28,7 +28,6 @@ public class FreezeCommand implements CommandExecutor {
                 return true;
             }
 
-            assert target != null;
             freezePlayer(p, target);
 
             return true;

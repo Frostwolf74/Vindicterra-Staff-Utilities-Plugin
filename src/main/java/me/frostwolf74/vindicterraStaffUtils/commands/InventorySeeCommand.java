@@ -11,7 +11,6 @@ import org.jetbrains.annotations.NotNull;
 
 
 public class InventorySeeCommand implements CommandExecutor {
-    // TODO needs player-on-player testing
     @Override
     public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
         if(strings.length == 0) return false;
