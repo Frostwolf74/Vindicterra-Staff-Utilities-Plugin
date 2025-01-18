@@ -4,7 +4,6 @@ import me.frostwolf74.vindicterraStaffUtils.VindicterraStaffUtils;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 
-import org.bukkit.BanList;
 import org.bukkit.NamespacedKey;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
