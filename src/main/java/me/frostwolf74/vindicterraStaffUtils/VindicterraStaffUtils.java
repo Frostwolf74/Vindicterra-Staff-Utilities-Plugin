@@ -22,22 +22,18 @@ public final class VindicterraStaffUtils extends JavaPlugin {
         plugin = this;
 
         this.getServer().getConsoleSender().sendMessage("\n\n" +
-        ChatColor.RED +                     " __     ___           _ _      _                         ____  _         __  __    _   _ _   _ _     \n" +
-        ChatColor.RED +                     " \\ \\   / (_)_ __   __| (_) ___| |_ ___ _ __ _ __ __ _   / ___|| |_ __ _ / _|/ _|  | | | | |_(_) |___ \n" +
-        ChatColor.RED +                     "  \\ \\ / /| | '_ \\ / _` | |/ __| __/ _ \\ '__| '__/ _` |  \\___ \\| __/ _` | |_| |_   | | | | __| | / __| \n" +
-        ChatColor.WHITE +                   "   \\ V / | | | | | (_| | | (__| ||  __/ |  | | | (_| |   ___) | || (_| |  _|  _|  | |_| | |_| | \\__ \\ \n" +
-                                            "    \\_/  |_|_| |_|\\__,_|_|\\___|\\__\\___|_|  |_|  \\__,_|  |____/ \\__\\__,_|_| |_|     \\___/ \\__|_|_|___/ \n\n" +
-                                            "                         ___        ___           _              _  __ ____ _ _  \n" +
-                                            "                        | _ )_  _  | __| _ ___ __| |___ __ _____| |/ _|__  | | | \n" +
-                                            "                        | _ \\ || | | _| '_/ _ (_-<  _\\ V  V / _ \\ |  _| / /|_  _|\n" +
-                                            "                        |___/\\_, | |_||_| \\___/__/\\__|\\_/\\_/\\___/_|_|  /_/   |_| \n" +
-                                            "                            |__/   ");
+                ChatColor.DARK_RED                 +"██╗ " + ChatColor.DARK_RED + "  ██╗" + "    ████" + ChatColor.DARK_RED + "███╗" + "    ██╗ " + ChatColor.DARK_RED + "  ██╗\n" +
+                ChatColor.DARK_RED                 +"██║ " + ChatColor.DARK_RED + "  ██║" + "    ██╔═" + ChatColor.DARK_RED + "═══╝" + "    ██║ " + ChatColor.DARK_RED + "  ██║\n" +
+                ChatColor.GRAY                     +"██║ " + ChatColor.DARK_RED + "  ██║" + "    ████" + ChatColor.GRAY     + "███╗" + "    ██║ " + ChatColor.GRAY     + "  ██║\n" +
+                ChatColor.GRAY                     +"╚██╗" + ChatColor.GRAY     + " ██╔╝" + "    ╚═══" + ChatColor.GRAY     + "═██║" + "    ██║ " + ChatColor.GRAY     + "  ██║\n" +
+                ChatColor.GRAY                     +" ╚██" + ChatColor.GRAY     + "██╔╝ " + "    ████" + ChatColor.GRAY     + "███║" + "    ╚███" + ChatColor.GRAY     + "███╔╝\n" +
+                ChatColor.GRAY                     +"  ╚═" + ChatColor.GRAY     + "══╝  " + "    ╚═══" + ChatColor.GRAY     + "═══╝" + "     ╚══" + ChatColor.GRAY     + "═══╝ \n" +
+                ChatColor.AQUA                     +"\n          By Frostwolf74\n\n");
 
 
         getCommand("staff").setExecutor(new StaffModeCommand());
         getCommand("staffchat").setExecutor(new StaffChatCommand());
         getCommand("freeze").setExecutor(new FreezeCommand());
-        getCommand("inventorysee").setExecutor(new InventorySeeCommand());
         getCommand("vanish").setExecutor(new VanishCommand());
         getCommand("ban").setExecutor(new BanCommand());
         getCommand("kick").setExecutor(new KickCommand());
