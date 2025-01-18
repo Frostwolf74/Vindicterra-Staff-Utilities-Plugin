@@ -33,7 +33,7 @@ public class MuteCommand implements CommandExecutor {
                 return true;
             }
 
-            return mutePlayer(target, strings);
+            return mutePlayer(target, strings); // returns if the command was successful
         }
         return false;
     }
@@ -54,24 +54,26 @@ public class MuteCommand implements CommandExecutor {
 
         Calendar expireDate = Calendar.getInstance();
 
-        int reasonIndex = 2;
-        String timeType;
+        int reasonIndex = 2; // "2" is the index position in the string args for where the reason should be by default, ex: /mute [player] [limit] [reason]
+                             //                                                                                                       0        1       2
+        String timeType; // h, d, w, m, y
         List<String> stringsSplit;
 
-        if (strings.length > 1) {
-            stringsSplit = new ArrayList<>(List.of(strings[1].split("")));
+        if (strings.length > 1) { // prevents empty command arguments
+            stringsSplit = new ArrayList<>(List.of(strings[1].split(""))); // split argument limit into sections
 
-            timeType = stringsSplit.get(stringsSplit.size() - 1);
-        } else {
+            timeType = stringsSplit.get(stringsSplit.size() - 1); // gets the last index since thats always where the time type is
+        }
+        else {
             return false;
         }
 
         int muteLengthS = 0;
 
-        if (isNumeric(stringsSplit.get(0))) {
-            stringsSplit.remove(stringsSplit.size() - 1);
+        if (isNumeric(stringsSplit.get(0))) { // checks if the argument specified a time limit or hasn't
+            stringsSplit.remove(stringsSplit.size() - 1); // removes the time type character from the argument
 
-            float timeLimit = Float.parseFloat(String.join("", stringsSplit));
+            float timeLimit = Float.parseFloat(String.join("", stringsSplit)); // the remaining information can be put into the time limit as a float, we now have the time type and time limit
 
             switch (timeType) {
                 case "h":
@@ -94,32 +96,33 @@ public class MuteCommand implements CommandExecutor {
                     return true;
             }
 
-            expireDate.setTimeInMillis(System.currentTimeMillis() + muteLengthS * 1000L);
+            expireDate.setTimeInMillis(System.currentTimeMillis() + muteLengthS * 1000L); // convert the seconds into a unix timestamp
 
             p.sendMessage(Component.text("\nPlayer " + target.getName() + " has been muted.\n", NamedTextColor.RED));
-        } else {
+        }
+        else { // if the limit argument isn't numeric it must be a string and therefore that must mean it is actually the reason argument and a time limit hasn't been specified therefore it must be a permanent mute
             expireDate = null;
             reasonIndex = 1;
 
             p.sendMessage(Component.text("\nPlayer " + target.getName() + " has been permanently muted.\n", NamedTextColor.RED));
         }
 
-        StringBuilder reason = new StringBuilder();
+        StringBuilder reason = new StringBuilder(); // merge the reason arguments into a single string
 
         for (int i = reasonIndex; i < strings.length; ++i) {
             reason.append(strings[i]).append(" ");
         }
 
-        int unixTime = (int) (System.currentTimeMillis() / 1000L);
+        int unixTime = (int) (System.currentTimeMillis() / 1000L); // calculating unmute time
         int unMuteTimeStamp = unixTime + muteLengthS;
 
-        target.getPersistentDataContainer().set(new NamespacedKey(VindicterraStaffUtils.getPlugin(), "isMuted"), PersistentDataType.BOOLEAN, true);
+        target.getPersistentDataContainer().set(new NamespacedKey(VindicterraStaffUtils.getPlugin(), "isMuted"), PersistentDataType.BOOLEAN, true); // using persistent data containers so the data remains persistent and is on a per-player basis
         target.getPersistentDataContainer().set(new NamespacedKey(VindicterraStaffUtils.getPlugin(), "unmuteTimeStamp"), PersistentDataType.INTEGER, unMuteTimeStamp);
 
-        if (expireDate != null) {
+        if (expireDate != null) { // creating a bukkit runnable to unmute the player when their mute time has expired
             BukkitTask muteTask = p.getServer().getScheduler().runTaskTimer(VindicterraStaffUtils.getPlugin(), () -> {
                 if (((int) (System.currentTimeMillis() / 1000L)) >= unMuteTimeStamp) {
-                    target.getPersistentDataContainer().set(new NamespacedKey(VindicterraStaffUtils.getPlugin(), "isMuted"), PersistentDataType.BOOLEAN, false);
+                    target.getPersistentDataContainer().set(new NamespacedKey(VindicterraStaffUtils.getPlugin(), "isMuted"), PersistentDataType.BOOLEAN, false); // this is used as a condition on whether the player can send a message in chat or not
                     VindicterraStaffUtils.getRunningPlayerMutedTasks().get(target.getUniqueId()).cancel();
                 }
             }, 0L, 1200L); // updates every minute
@@ -129,14 +132,11 @@ public class MuteCommand implements CommandExecutor {
             VindicterraStaffUtils.setRunningPlayerMutedTasks(runningTasks);
 
             target.sendMessage(Component.text("\nYou have been muted for " + strings[1] + "\nReason: " + reason + "\n", TextColor.color(255, 0, 0), TextDecoration.BOLD));
-
-        } else {
+        }
+        else { // we want to make sure the player is muted permanently but should also be in the running tasks hashmap so they can be unmuted manually via command, foolproof until 2038
             BukkitTask muteTask = p.getServer().getScheduler().runTaskTimer(VindicterraStaffUtils.getPlugin(), () -> {
-                if (((int) (System.currentTimeMillis() / 1000L)) >= unMuteTimeStamp) {
-                    target.getPersistentDataContainer().set(new NamespacedKey(VindicterraStaffUtils.getPlugin(), "isMuted"), PersistentDataType.BOOLEAN, false);
-                    VindicterraStaffUtils.getRunningPlayerMutedTasks().get(target.getUniqueId()).cancel();
-                }
-            }, 0L, 1200L); // updates every minute
+                if (((int) (System.currentTimeMillis() / 1000L)) >= Integer.MAX_VALUE) {}
+                }, 0L, 1200L);
 
             Map<UUID, BukkitTask> runningTasks = VindicterraStaffUtils.getRunningPlayerMutedTasks();
             runningTasks.put(target.getUniqueId(), muteTask);

@@ -12,7 +12,7 @@ import java.util.*;
 public final class VindicterraStaffUtils extends JavaPlugin {
     private static VindicterraStaffUtils plugin;
     private static Map<UUID, BukkitTask> runningTasks = new HashMap<>(); // for hotbar text in staff mode
-    private static Map<UUID, BukkitTask> runningPlayerMutedTasks = new HashMap<>(); // for muted players who leave and rejoin
+    private static Map<UUID, BukkitTask> runningPlayerMutedTasks = new HashMap<>(); // contains bukkit runnables that unmute the player when their mute expires
     private static Map<Player, Player> targetPlayers = new HashMap<>();
     //                    ^      ^
     //               staff mem   target
@@ -21,14 +21,13 @@ public final class VindicterraStaffUtils extends JavaPlugin {
     public void onEnable() {
         plugin = this;
 
-        this.getServer().getConsoleSender().sendMessage("\n\n" +
-                ChatColor.DARK_RED                 +"██╗ " + ChatColor.DARK_RED + "  ██╗" + "    ████" + ChatColor.DARK_RED + "███╗" + "    ██╗ " + ChatColor.DARK_RED + "  ██╗\n" +
-                ChatColor.DARK_RED                 +"██║ " + ChatColor.DARK_RED + "  ██║" + "    ██╔═" + ChatColor.DARK_RED + "═══╝" + "    ██║ " + ChatColor.DARK_RED + "  ██║\n" +
-                ChatColor.GRAY                     +"██║ " + ChatColor.DARK_RED + "  ██║" + "    ████" + ChatColor.GRAY     + "███╗" + "    ██║ " + ChatColor.GRAY     + "  ██║\n" +
-                ChatColor.GRAY                     +"╚██╗" + ChatColor.GRAY     + " ██╔╝" + "    ╚═══" + ChatColor.GRAY     + "═██║" + "    ██║ " + ChatColor.GRAY     + "  ██║\n" +
-                ChatColor.GRAY                     +" ╚██" + ChatColor.GRAY     + "██╔╝ " + "    ████" + ChatColor.GRAY     + "███║" + "    ╚███" + ChatColor.GRAY     + "███╔╝\n" +
-                ChatColor.GRAY                     +"  ╚═" + ChatColor.GRAY     + "══╝  " + "    ╚═══" + ChatColor.GRAY     + "═══╝" + "     ╚══" + ChatColor.GRAY     + "═══╝ \n" +
-                ChatColor.AQUA                     +"\n          By Frostwolf74\n\n");
+        this.getServer().getConsoleSender().sendMessage("§4██╗   ██╗    ███████╗    ██╗   ██╗");
+        this.getServer().getConsoleSender().sendMessage("§4██║   ██║    ██╔════╝    ██║   ██║");
+        this.getServer().getConsoleSender().sendMessage("§4██║   ██║    ███████╗    ██║   ██║");
+        this.getServer().getConsoleSender().sendMessage("§7╚██╗ ██╔╝    ╚════██║    ██║   ██║");
+        this.getServer().getConsoleSender().sendMessage("§7 ╚████╔╝     ███████║    ╚██████╔╝");
+        this.getServer().getConsoleSender().sendMessage("§7  ╚═══╝      ╚══════╝     ╚═════╝ ");
+        this.getServer().getConsoleSender().sendMessage("§b          By Frostwolf74          ");
 
 
         getCommand("staff").setExecutor(new StaffModeCommand());

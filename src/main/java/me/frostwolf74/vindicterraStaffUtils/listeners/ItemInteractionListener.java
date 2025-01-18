@@ -8,7 +8,6 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;
 
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Entity;
@@ -33,7 +32,7 @@ public class ItemInteractionListener implements Listener {
     public void onItemInteraction(PlayerInteractEvent e) {
         if(!(e.getAction().isRightClick()) || e.getItem() == null) return;
 
-        if(Boolean.TRUE.equals(e.getPlayer().getPersistentDataContainer().get(new NamespacedKey(VindicterraStaffUtils.getPlugin(), "inStaffMode"), PersistentDataType.BOOLEAN))) {
+        if(Boolean.TRUE.equals(e.getPlayer().getPersistentDataContainer().get(new NamespacedKey(VindicterraStaffUtils.getPlugin(), "inStaffMode"), PersistentDataType.BOOLEAN))) { // for staff items
             if (Objects.equals(e.getPlayer().getInventory().getItemInMainHand().getType(), Material.POTION)) { // NV
                 if (Boolean.TRUE.equals(e.getPlayer().getPersistentDataContainer().get(new NamespacedKey(VindicterraStaffUtils.getPlugin(), "hasStaffNightVision"), PersistentDataType.BOOLEAN))) {
                     e.getPlayer().clearActivePotionEffects();
@@ -51,30 +50,17 @@ public class ItemInteractionListener implements Listener {
                     e.getPlayer().sendMessage("Staff night vision enabled.");
                 }
             } else if (Objects.equals(e.getPlayer().getInventory().getItemInMainHand().getType(), Material.ICE)) { // freeze
-                e.setCancelled(true); // TODO temporary
+                RayTraceResult trace = e.getPlayer().rayTraceEntities(10);
 
-                if (e.getInteractionPoint() == null) return;
-                Entity targetEntity = e.getPlayer().getTargetEntity(10);
+                if(trace == null){
+                    e.getPlayer().sendMessage("No entity hit");
+                    return;
+                }
 
-                if(targetEntity == null) return;
-
-                BoundingBox entityHitBox = e.getPlayer().getTargetEntity(10).getBoundingBox();
-                Vector line = e.getPlayer().getEyeLocation().getDirection();
-
-                for(double i = 0; i < line.length(); i+=0.25){
-                    Vector newLoc = line.clone().add(line.clone().normalize().multiply(i));
-
-                    if(entityHitBox.contains(newLoc)){
-                        e.getPlayer().sendMessage("Ray trace result: " + targetEntity.getType());
-
-                        FreezeCommand.freezePlayer(e.getPlayer(), (Player) targetEntity);
-
-                        break;
-                    }
-
-                    if(i >= 10){
-                        e.getPlayer().sendMessage("Ray trace is null");
-                    }
+                if(trace.getHitEntity() instanceof Player target){
+                    FreezeCommand.freezePlayer(e.getPlayer(), target);
+                } else{
+                    e.getPlayer().sendMessage("Entity is not an instance of Player");
                 }
             } else if (Objects.equals(e.getPlayer().getInventory().getItemInMainHand().getType(), Material.ENDER_PEARL)) { // RTP
                 Collection<?> onlinePlayers = e.getPlayer().getServer().getOnlinePlayers();
@@ -96,15 +82,7 @@ public class ItemInteractionListener implements Listener {
                     VanishCommand.vanishPlayer(e.getPlayer(), false);
                 }
             } else if (Objects.equals(e.getPlayer().getInventory().getItemInMainHand().getType(), Material.CHEST)) { // see inventory
-                if (e.getInteractionPoint() == null) return;
-
-                RayTraceResult trace = e.getPlayer().getServer().getWorld(e.getPlayer().getWorld().getName()).rayTraceEntities(e.getInteractionPoint(), e.getClickedPosition(), 10);
-
-                if (!(trace == null)) {
-                    if (trace.getHitEntity() instanceof Player target) {
-
-                    }
-                }
+                // TODO
             } else if (Objects.equals(e.getPlayer().getInventory().getItemInMainHand().getType(), Material.PLAYER_HEAD)) { // online players
                 Inventory onlinePlayersInventory = Bukkit.createInventory(null, 9 * 6, "Online Players");
 
