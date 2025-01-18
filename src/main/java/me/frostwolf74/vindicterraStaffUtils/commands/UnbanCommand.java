@@ -19,7 +19,7 @@ public class UnbanCommand implements CommandExecutor {
         if(commandSender instanceof Player p){
             if(!p.hasPermission("VSU.punish.ban")) return true;
 
-            if(strings[0].equals("all") || p.isOp()){ // unbans all players, ops have access only
+            if(strings[0].equals("all") && p.isOp()){ // unbans all players, ops have access only
                 for(OfflinePlayer player : p.getServer().getBannedPlayers()) {
                     if(player.isBanned()){
                         p.getServer().getBanList(BanList.Type.NAME).pardon(p.getName());

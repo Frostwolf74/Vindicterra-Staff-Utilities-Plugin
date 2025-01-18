@@ -4,20 +4,42 @@ import me.frostwolf74.vindicterraStaffUtils.VindicterraStaffUtils;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 
+import org.bukkit.BanList;
 import org.bukkit.NamespacedKey;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.persistence.PersistentDataType;
 
+import org.bukkit.scheduler.BukkitTask;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.Map;
+import java.util.UUID;
 
 public class UnmuteCommand implements CommandExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
         if(commandSender instanceof Player p){
             if(!p.hasPermission("VSU.punish.mute")) return true;
+
+            if(strings[0].equals("all") && p.isOp()){ // unmutes all players, ops have access only
+                Map<UUID, BukkitTask> mutedPlayers = VindicterraStaffUtils.getRunningPlayerMutedTasks();
+
+                for(OfflinePlayer player : p.getServer().getOfflinePlayers()) {
+                    if(mutedPlayers.containsKey(player.getUniqueId())){
+                        mutedPlayers.get(player.getUniqueId()).cancel();
+                        mutedPlayers.remove(player.getUniqueId());
+                    }
+                }
+
+                VindicterraStaffUtils.setRunningPlayerMutedTasks(mutedPlayers);
+
+                p.sendMessage(Component.text("All players have been unmuted.", NamedTextColor.GREEN));
+                return true;
+            }
 
             Player target = p.getServer().getPlayer(strings[0]);
 
