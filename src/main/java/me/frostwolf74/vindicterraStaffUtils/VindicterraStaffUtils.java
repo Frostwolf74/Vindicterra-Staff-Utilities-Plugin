@@ -2,11 +2,8 @@ package me.frostwolf74.vindicterraStaffUtils;
 
 import me.frostwolf74.vindicterraStaffUtils.commands.*;
 import me.frostwolf74.vindicterraStaffUtils.listeners.*;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
-import net.kyori.adventure.text.format.TextFormat;
 import org.bukkit.ChatColor;
-import org.bukkit.inventory.Inventory;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitTask;
 
@@ -16,8 +13,9 @@ public final class VindicterraStaffUtils extends JavaPlugin {
     private static VindicterraStaffUtils plugin;
     private static Map<UUID, BukkitTask> runningTasks = new HashMap<>(); // for hotbar text in staff mode
     private static Map<UUID, BukkitTask> runningPlayerMutedTasks = new HashMap<>(); // for muted players who leave and rejoin
-    private static Map<UUID, Inventory> openedInventories = new HashMap<>(); // for viewed inventories
-
+    private static Map<Player, Player> targetPlayers = new HashMap<>();
+    //                    ^      ^
+    //               staff mem   target
 
     @Override
     public void onEnable() {
@@ -89,11 +87,11 @@ public final class VindicterraStaffUtils extends JavaPlugin {
         VindicterraStaffUtils.runningPlayerMutedTasks = runningPlayerMutedTasks;
     }
 
-    public static Map<UUID, Inventory> getopenedInventories() {
-        return openedInventories;
+    public static Map<Player, Player> getTargetPlayers() {
+        return targetPlayers;
     }
 
-    public static void setOpenedInventories(Map<UUID, Inventory> openedInventories) {
-        VindicterraStaffUtils.openedInventories = openedInventories;
+    public static void setTargetPlayers(Map<Player, Player> targetPlayers) {
+        VindicterraStaffUtils.targetPlayers = targetPlayers;
     }
 }

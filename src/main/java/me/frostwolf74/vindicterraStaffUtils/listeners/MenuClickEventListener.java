@@ -88,26 +88,19 @@ public class MenuClickEventListener implements Listener {
                 }
 
                 assert target != null;
-                switch(e.getCurrentItem().getType()){ // TODO
+                switch(e.getCurrentItem().getType()){
                     case WHITE_WOOL:
-                        target.kick(Component.text(openVirtualAnvil(p)));
+                        requestChatInput(p, target, "kick");
                         break;
                     case ORANGE_WOOL:
-                        String[] s = new String[2];
-                        s[1] = openVirtualAnvil(p);
-
-                        MuteCommand.mutePlayer(target, s);
+                        requestChatInput(p, target, "mute");
                         break;
                     case RED_WOOL:
-                        String[] s1 = new String[2];
-                        s1[1] = openVirtualAnvil(p);
-
-                        BanCommand.banPlayer(p, p.getServer().getOfflinePlayer(target.name().toString()), s1);
-
-                        p.sendMessage("Found offline player, name: " + p.getServer().getOfflinePlayer(target.name().toString()).getName());
-                        p.sendMessage(Component.text("Original string: " + target.name().toString()));
+                        requestChatInput(p, target, "ban");
                         break;
                 }
+
+                p.closeInventory();
             }
 
             // if in staff mode
@@ -119,9 +112,16 @@ public class MenuClickEventListener implements Listener {
         }
     }
 
-    public static String openVirtualAnvil(Player target){
+    public static void requestChatInput(Player p, Player target, String type){
+        p.sendMessage("Please enter the time limit followed by the reason or just the reason.");
+        p.getPersistentDataContainer().set(new NamespacedKey(VindicterraStaffUtils.getPlugin(), "awaitingInput-reason"), PersistentDataType.STRING, type);
 
-        return target.getName();
+        // targeted player is added to the targets list so it can be called from the on-message event listener
+        Map<Player, Player>targets = VindicterraStaffUtils.getTargetPlayers();
+
+        targets.put(p, target);
+
+        VindicterraStaffUtils.setTargetPlayers(targets);
     }
 
     // creates each inventory interface

@@ -51,6 +51,8 @@ public class StaffChatCommand implements CommandExecutor {
         }
     }
 
+    // TODO CHAT COLOURS ARE DEFINED BY CHAT PREFIXES
+
 //    private static String getPlayerTeamColor(Player player) { // for vanilla teams
 //        if (player.getScoreboard() != null) {
 //            Team team = player.getScoreboard().getEntryTeam(player.getName());
@@ -61,14 +63,8 @@ public class StaffChatCommand implements CommandExecutor {
 //        return ChatColor.WHITE.toString(); // Default to white if no team or color
 //    }
 
-    public static String getPlayerFormattedName(Player p){
-//        Node node = Node.builder().
-        return p.getDisplayName();
-    }
-
     public static void sendStaffChatMessage(Player p, String messageRaw) {
         for(Player p1 : p.getServer().getOnlinePlayers()) {
-            String formattedName = getPlayerFormattedName(p);
 
             List<Component> components = new ArrayList<>();
 
@@ -76,7 +72,7 @@ public class StaffChatCommand implements CommandExecutor {
             components.add(1, Component.text("Staff", TextColor.color(96, 96, 255)));
             components.add(2, Component.text("]", TextColor.color(192, 192, 192)));
             components.add(3, Component.text(" (" + p.getWorld().getName() + ") ", TextColor.color(192, 192, 192)));
-            components.add(4, Component.text(formattedName));
+            components.add(4, Component.text(p.getDisplayName()));
             components.add(5, Component.text(": ", TextColor.color(192, 192, 192)));
             components.add(6, Component.text(messageRaw, TextColor.color(192, 192, 192)));
 

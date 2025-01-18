@@ -2,7 +2,6 @@ package me.frostwolf74.vindicterraStaffUtils.commands;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
-import net.kyori.adventure.text.format.TextColor;
 
 import org.bukkit.BanList;
 import org.bukkit.Bukkit;
@@ -19,6 +18,17 @@ public class UnbanCommand implements CommandExecutor {
     public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
         if(commandSender instanceof Player p){
             if(!p.hasPermission("VSU.punish.ban")) return true;
+
+            if(strings[0].equals("all") || p.isOp()){ // unbans all players, ops have access only
+                for(OfflinePlayer player : p.getServer().getBannedPlayers()) {
+                    if(player.isBanned()){
+                        p.getServer().getBanList(BanList.Type.NAME).pardon(p.getName());
+                    }
+                }
+
+                p.sendMessage(Component.text("All players have been unbanned.", NamedTextColor.GREEN));
+                return true;
+            }
 
             OfflinePlayer target = Bukkit.getPlayer(strings[0]);
 

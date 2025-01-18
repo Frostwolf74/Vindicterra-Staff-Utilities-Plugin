@@ -3,7 +3,6 @@ import me.frostwolf74.vindicterraStaffUtils.VindicterraStaffUtils;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
-import net.kyori.adventure.text.format.TextColor;
 
 import org.bukkit.NamespacedKey;
 import org.bukkit.command.Command;
@@ -36,6 +35,7 @@ public class UnmuteCommand implements CommandExecutor {
             else{
                 p.sendMessage(Component.text("Player not muted", NamedTextColor.RED));
             }
+            return true;
         }
         return false;
     }

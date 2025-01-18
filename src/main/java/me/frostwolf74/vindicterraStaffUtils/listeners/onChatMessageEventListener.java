@@ -1,21 +1,27 @@
 package me.frostwolf74.vindicterraStaffUtils.listeners;
 
 import io.papermc.paper.event.player.AsyncChatEvent;
+import io.papermc.paper.event.player.ChatEvent;
 import me.frostwolf74.vindicterraStaffUtils.VindicterraStaffUtils;
+import me.frostwolf74.vindicterraStaffUtils.commands.BanCommand;
+import me.frostwolf74.vindicterraStaffUtils.commands.MuteCommand;
 import me.frostwolf74.vindicterraStaffUtils.commands.StaffChatCommand;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.NamespacedKey;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.persistence.PersistentDataType;
 
+import java.util.Map;
+import java.util.Objects;
 
 public class onChatMessageEventListener implements Listener {
-    @EventHandler(priority = EventPriority.LOWEST)
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onChat(AsyncChatEvent e) {
         if(Boolean.TRUE.equals(e.getPlayer().getPersistentDataContainer().get(new NamespacedKey(VindicterraStaffUtils.getPlugin(), "isMuted"), PersistentDataType.BOOLEAN))){
             e.setCancelled(true);
@@ -38,6 +44,33 @@ public class onChatMessageEventListener implements Listener {
             StaffChatCommand.sendStaffChatMessage(e.getPlayer(), message);
 
             e.setCancelled(true);
+        }
+
+        String reason = e.getPlayer().getPersistentDataContainer().get(new NamespacedKey(VindicterraStaffUtils.getPlugin(), "awaitingInput-reason"), PersistentDataType.STRING);
+
+        if(!Objects.equals(reason, "NONE") && reason != null){
+            e.setCancelled(true);
+
+            e.getPlayer().getPersistentDataContainer().set(new NamespacedKey(VindicterraStaffUtils.getPlugin(), "awaitingInput-reason"), PersistentDataType.STRING, "NONE");
+
+            Map<Player, Player> targetPlayers = VindicterraStaffUtils.getTargetPlayers();
+
+            Player target = targetPlayers.get(e.getPlayer());
+            targetPlayers.remove(e.getPlayer());
+
+            VindicterraStaffUtils.setTargetPlayers(targetPlayers);
+
+            switch(Objects.requireNonNull(reason)){
+                case "kick":
+                    target.kick(e.message());
+                    break;
+                case "mute":
+                    MuteCommand.mutePlayer(target, e.message().toString().split(""));
+                    break;
+                case "ban":
+                    BanCommand.banPlayer(e.getPlayer(), target, e.message().toString().split(""));
+                    break;
+            }
         }
     }
 }
