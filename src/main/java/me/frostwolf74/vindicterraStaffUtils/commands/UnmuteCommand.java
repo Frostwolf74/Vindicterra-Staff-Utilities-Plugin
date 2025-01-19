@@ -42,16 +42,7 @@ public class UnmuteCommand implements CommandExecutor {
 
             OfflinePlayer target = p.getServer().getOfflinePlayer(strings[0]);
 
-            if(mutedPlayers.contains(target.getUniqueId())){
-                mutedPlayers.remove(target.getUniqueId());
-
-                unmute(target);
-            }
-            else{
-                p.sendMessage(Component.text("Player not muted.", NamedTextColor.RED));
-            }
-            VindicterraStaffUtils.setScheduleUnmutePlayers(mutedPlayers);
-
+            unmute(target);
             return true;
         }
         return false;

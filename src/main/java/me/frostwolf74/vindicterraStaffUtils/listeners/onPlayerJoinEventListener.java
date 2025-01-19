@@ -9,9 +9,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.persistence.PersistentDataType;
-import org.bukkit.scheduler.BukkitTask;
 
-import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
 import java.util.List;
@@ -36,6 +34,7 @@ public class onPlayerJoinEventListener implements Listener {
         List<UUID> scheduleUnmutePlayer = VindicterraStaffUtils.getScheduleUnmutePlayers();
 
         if(scheduleUnmutePlayer.contains(e.getPlayer().getUniqueId())){
+            e.getPlayer().sendMessage(scheduleUnmutePlayer.toString());
             VindicterraStaffUtils.getScheduleUnmutePlayers().remove(e.getPlayer().getUniqueId());
 
             UnmuteCommand.unmute(e.getPlayer());

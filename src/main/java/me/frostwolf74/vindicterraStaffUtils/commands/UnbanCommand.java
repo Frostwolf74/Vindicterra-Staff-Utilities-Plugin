@@ -8,12 +8,17 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabExecutor;
 import org.bukkit.entity.Player;
 import org.bukkit.OfflinePlayer;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-public class UnbanCommand implements CommandExecutor {
+import java.util.ArrayList;
+import java.util.List;
+
+public class UnbanCommand implements CommandExecutor, TabExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
         if(commandSender instanceof Player p){
@@ -30,7 +35,7 @@ public class UnbanCommand implements CommandExecutor {
                 return true;
             }
 
-            OfflinePlayer target = Bukkit.getPlayer(strings[0]);
+            OfflinePlayer target = p.getServer().getOfflinePlayer(strings[0]);
 
             if (target == null) {
                 p.sendMessage(Component.text("Player not found", NamedTextColor.RED));
@@ -38,7 +43,7 @@ public class UnbanCommand implements CommandExecutor {
             }
 
             if(target.isBanned()){
-                target.getPlayer().getServer().getBanList(BanList.Type.NAME).pardon(target.getName());
+                p.getServer().getBanList(BanList.Type.NAME).pardon(target.getName());
                 p.sendMessage(Component.text("\n" + target.getName() + " has been unbanned\n", NamedTextColor.GREEN));
             }
             else{
@@ -51,5 +56,18 @@ public class UnbanCommand implements CommandExecutor {
             commandSender.getServer().getLogger().info("You must use /pardon if you wish to unban from console.");
             return true;
         }
+    }
+
+    @Override
+    public @Nullable List<String> onTabComplete(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
+        if(commandSender instanceof Player p){
+            List<String> list = new ArrayList<>();
+
+            for(OfflinePlayer player : p.getServer().getBannedPlayers()) {
+                list.add(player.getName());
+            }
+            return list;
+        }
+        return null;
     }
 }
