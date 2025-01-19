@@ -115,13 +115,9 @@ public class MuteCommand implements CommandExecutor {
             new BukkitRunnable() { // this will repeat every minute to check if the player is online
                 @Override
                 public void run() {
-                    Bukkit.getServer().getLogger().info("Unmute timestamp: " + unMuteTimeStamp);
-
                     if (((int) (System.currentTimeMillis() / 1000L)) >= unMuteTimeStamp) {
                         VindicterraStaffUtils.getScheduleUnmutePlayers().remove(target.getUniqueId());
                         UnmuteCommand.unmute(target);
-
-                        Bukkit.getServer().getLogger().info("Unmuted");
 
                         this.cancel();
                     }
@@ -131,9 +127,6 @@ public class MuteCommand implements CommandExecutor {
             target.sendMessage(Component.text("\nYou have been muted for " + strings[1] + "\nReason: " + reason + "\n", TextColor.color(255, 0, 0), TextDecoration.BOLD));
         }
         else { // we want to make sure the player is muted permanently but should also be in the running tasks hashmap so they can be unmuted manually via command
-            Map<UUID, BukkitTask> runningTasks = VindicterraStaffUtils.getRunningPlayerMutedTasks();
-            runningTasks.put(target.getUniqueId(), p.getServer().getScheduler().runTaskTimer(VindicterraStaffUtils.getPlugin(), () -> {}, 0L, Long.MAX_VALUE)); // this task repeats every 296533308333 years
-            VindicterraStaffUtils.setRunningPlayerMutedTasks(runningTasks);
 
             target.sendMessage(Component.text("\nYou have been permanently muted for: " + reason + "\n", TextColor.color(255, 0, 0), TextDecoration.BOLD));
         }

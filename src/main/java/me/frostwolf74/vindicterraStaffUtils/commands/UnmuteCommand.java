@@ -13,11 +13,9 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import org.bukkit.persistence.PersistentDataType;
-import org.bukkit.scheduler.BukkitTask;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 public class UnmuteCommand implements CommandExecutor {
     @Override
@@ -25,19 +23,18 @@ public class UnmuteCommand implements CommandExecutor {
         if(commandSender instanceof Player p){
             if(!p.hasPermission("VSU.punish.mute")) return true;
 
-            Map<UUID, BukkitTask> mutedPlayers = VindicterraStaffUtils.getRunningPlayerMutedTasks();
+            List<UUID> mutedPlayers = VindicterraStaffUtils.getScheduleUnmutePlayers();
 
             if(strings[0].equals("all") && p.isOp()){ // unmutes all players, ops have access only
                 for(OfflinePlayer target : p.getServer().getOfflinePlayers()) {
-                    if(mutedPlayers.containsKey(target.getUniqueId())){
-                        mutedPlayers.get(target.getUniqueId()).cancel();
+                    if(mutedPlayers.contains(target.getUniqueId())){
                         mutedPlayers.remove(target.getUniqueId());
 
                         unmute(target);
                     }
                 }
 
-                VindicterraStaffUtils.setRunningPlayerMutedTasks(mutedPlayers);
+                VindicterraStaffUtils.setScheduleUnmutePlayers(mutedPlayers);
 
                 p.sendMessage(Component.text("All players have been unmuted.", NamedTextColor.GREEN));
                 return true;
@@ -45,8 +42,7 @@ public class UnmuteCommand implements CommandExecutor {
 
             OfflinePlayer target = p.getServer().getOfflinePlayer(strings[0]);
 
-            if(mutedPlayers.containsKey(target.getUniqueId())){
-                mutedPlayers.get(target.getUniqueId()).cancel();
+            if(mutedPlayers.contains(target.getUniqueId())){
                 mutedPlayers.remove(target.getUniqueId());
 
                 unmute(target);
@@ -54,7 +50,7 @@ public class UnmuteCommand implements CommandExecutor {
             else{
                 p.sendMessage(Component.text("Player not muted.", NamedTextColor.RED));
             }
-            VindicterraStaffUtils.setRunningPlayerMutedTasks(mutedPlayers);
+            VindicterraStaffUtils.setScheduleUnmutePlayers(mutedPlayers);
 
             return true;
         }

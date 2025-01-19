@@ -17,9 +17,7 @@ public final class VindicterraStaffUtils extends JavaPlugin {
     private final static Map<UUID, BukkitTask> runningTasks = new HashMap<>(); // for hotbar text in staff mode
     @Getter
     @Setter
-    private static Map<UUID, BukkitTask> runningPlayerMutedTasks = new HashMap<>(); // contains bukkit runnables that unmute the player when their mute expires
-    @Getter
-    private final static List<UUID> scheduleUnmutePlayers = new ArrayList<>(); // players scheduled to be unmuted the next time they are online
+    private static List<UUID> scheduleUnmutePlayers = new ArrayList<>(); // players scheduled to be unmuted the next time they are online
     private final ConfigFile configFile = new ConfigFile(this, "tasks");
     @Getter
     private final static Map<Player, Player> targetPlayers = new HashMap<>();

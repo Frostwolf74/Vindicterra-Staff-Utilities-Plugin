@@ -11,10 +11,6 @@ import org.bukkit.persistence.PersistentDataType;
 public class onPlayerLeaveEventListener implements Listener {
     @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerLeaveEvent(PlayerQuitEvent e) {
-        if(Boolean.TRUE.equals(e.getPlayer().getPersistentDataContainer().get(new NamespacedKey(VindicterraStaffUtils.getPlugin(), "isMuted"), PersistentDataType.BOOLEAN))){
-            VindicterraStaffUtils.getRunningPlayerMutedTasks().get(e.getPlayer().getUniqueId()).cancel();
-        }
-
         if(Boolean.TRUE.equals(e.getPlayer().getPersistentDataContainer().get(new NamespacedKey(VindicterraStaffUtils.getPlugin(), "isVanished"), PersistentDataType.BOOLEAN))){
             VindicterraStaffUtils.getRunningTasks().get(e.getPlayer().getUniqueId()).cancel();
             VindicterraStaffUtils.getRunningTasks().remove(e.getPlayer().getUniqueId());
