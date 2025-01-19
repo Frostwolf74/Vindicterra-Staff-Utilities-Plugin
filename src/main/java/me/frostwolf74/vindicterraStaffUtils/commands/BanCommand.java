@@ -48,8 +48,8 @@ public class BanCommand implements CommandExecutor{
         Calendar expireDate = Calendar.getInstance();
 
         int reasonIndex = 2;
-        String timeType = null;
-        List<String> stringsSplit = new ArrayList<>();
+        String timeType;
+        List<String> stringsSplit;
 
         if (strings.length > 1) {
             stringsSplit = new ArrayList<>(List.of(strings[1].split("")));

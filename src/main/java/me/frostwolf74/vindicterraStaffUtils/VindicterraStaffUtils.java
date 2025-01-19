@@ -1,25 +1,36 @@
 package me.frostwolf74.vindicterraStaffUtils;
 
+import lombok.Getter;
+import lombok.Setter;
 import me.frostwolf74.vindicterraStaffUtils.commands.*;
 import me.frostwolf74.vindicterraStaffUtils.listeners.*;
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitTask;
-
 import java.util.*;
 
+@Getter
 public final class VindicterraStaffUtils extends JavaPlugin {
+    @Getter
     private static VindicterraStaffUtils plugin;
-    private static Map<UUID, BukkitTask> runningTasks = new HashMap<>(); // for hotbar text in staff mode
+    @Getter
+    private final static Map<UUID, BukkitTask> runningTasks = new HashMap<>(); // for hotbar text in staff mode
+    @Getter
+    @Setter
     private static Map<UUID, BukkitTask> runningPlayerMutedTasks = new HashMap<>(); // contains bukkit runnables that unmute the player when their mute expires
-    private static Map<Player, Player> targetPlayers = new HashMap<>();
+    @Getter
+    private final static List<UUID> scheduleUnmutePlayers = new ArrayList<>(); // players scheduled to be unmuted the next time they are online
+    private final ConfigFile configFile = new ConfigFile(this, "tasks");
+    @Getter
+    private final static Map<Player, Player> targetPlayers = new HashMap<>();
     //                    ^      ^
     //               staff mem   target
 
     @Override
     public void onEnable() {
         plugin = this;
+
+        configFile.load();
 
         this.getServer().getConsoleSender().sendMessage("§4██╗   ██╗    ███████╗    ██╗   ██╗");
         this.getServer().getConsoleSender().sendMessage("§4██║   ██║    ██╔════╝    ██║   ██║");
@@ -56,34 +67,6 @@ public final class VindicterraStaffUtils extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        runningTasks.values().forEach(BukkitTask::cancel);
-    }
-
-    public static VindicterraStaffUtils getPlugin(){
-        return plugin;
-    }
-
-    public static Map<UUID, BukkitTask> getRunningTasks() {
-        return runningTasks;
-    }
-
-    public static void setRunningTasks(Map<UUID, BukkitTask> newRunningTasks) {
-        runningTasks = newRunningTasks;
-    }
-
-    public static Map<UUID, BukkitTask> getRunningPlayerMutedTasks() {
-        return runningPlayerMutedTasks;
-    }
-
-    public static void setRunningPlayerMutedTasks(Map<UUID, BukkitTask> runningPlayerMutedTasks) {
-        VindicterraStaffUtils.runningPlayerMutedTasks = runningPlayerMutedTasks;
-    }
-
-    public static Map<Player, Player> getTargetPlayers() {
-        return targetPlayers;
-    }
-
-    public static void setTargetPlayers(Map<Player, Player> targetPlayers) {
-        VindicterraStaffUtils.targetPlayers = targetPlayers;
+        configFile.save();
     }
 }

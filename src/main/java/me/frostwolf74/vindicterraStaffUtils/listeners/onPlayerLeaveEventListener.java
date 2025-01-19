@@ -7,10 +7,6 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.persistence.PersistentDataType;
-import org.bukkit.scheduler.BukkitTask;
-
-import java.util.Map;
-import java.util.UUID;
 
 public class onPlayerLeaveEventListener implements Listener {
     @EventHandler(priority = EventPriority.LOWEST)
@@ -20,12 +16,8 @@ public class onPlayerLeaveEventListener implements Listener {
         }
 
         if(Boolean.TRUE.equals(e.getPlayer().getPersistentDataContainer().get(new NamespacedKey(VindicterraStaffUtils.getPlugin(), "isVanished"), PersistentDataType.BOOLEAN))){
-            Map<UUID, BukkitTask> runningHotbarTasks = VindicterraStaffUtils.getRunningTasks();
-
-            runningHotbarTasks.get(e.getPlayer().getUniqueId()).cancel();
-            runningHotbarTasks.remove(e.getPlayer().getUniqueId());
-
-            VindicterraStaffUtils.setRunningTasks(runningHotbarTasks);
+            VindicterraStaffUtils.getRunningTasks().get(e.getPlayer().getUniqueId()).cancel();
+            VindicterraStaffUtils.getRunningTasks().remove(e.getPlayer().getUniqueId());
         }
     }
 }

@@ -53,19 +53,16 @@ public class onChatMessageEventListener implements Listener {
 
             e.getPlayer().getPersistentDataContainer().set(new NamespacedKey(VindicterraStaffUtils.getPlugin(), "awaitingInput-reason"), PersistentDataType.STRING, "NONE");
 
-            Map<Player, Player> targetPlayers = VindicterraStaffUtils.getTargetPlayers();
+            Player target = VindicterraStaffUtils.getTargetPlayers().get(e.getPlayer());
 
-            Player target = targetPlayers.get(e.getPlayer());
-            targetPlayers.remove(e.getPlayer());
-
-            VindicterraStaffUtils.setTargetPlayers(targetPlayers);
+            VindicterraStaffUtils.getTargetPlayers().remove(e.getPlayer());
 
             switch(Objects.requireNonNull(reason)){
                 case "kick":
                     target.kick(e.message());
                     break;
                 case "mute":
-                    MuteCommand.mutePlayer(target, e.message().toString().split(""));
+                    MuteCommand.mutePlayer(e.getPlayer(), target, e.message().toString().split(""));
                     break;
                 case "ban":
                     BanCommand.banPlayer(e.getPlayer(), target, e.message().toString().split(""));

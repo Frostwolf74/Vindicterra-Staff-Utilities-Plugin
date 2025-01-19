@@ -4,14 +4,15 @@ import me.frostwolf74.vindicterraStaffUtils.VindicterraStaffUtils;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 
+import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.persistence.PersistentDataType;
 
+import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.scheduler.BukkitTask;
 import org.jetbrains.annotations.NotNull;
 
@@ -24,13 +25,15 @@ public class UnmuteCommand implements CommandExecutor {
         if(commandSender instanceof Player p){
             if(!p.hasPermission("VSU.punish.mute")) return true;
 
-            if(strings[0].equals("all") && p.isOp()){ // unmutes all players, ops have access only
-                Map<UUID, BukkitTask> mutedPlayers = VindicterraStaffUtils.getRunningPlayerMutedTasks();
+            Map<UUID, BukkitTask> mutedPlayers = VindicterraStaffUtils.getRunningPlayerMutedTasks();
 
-                for(OfflinePlayer player : p.getServer().getOfflinePlayers()) {
-                    if(mutedPlayers.containsKey(player.getUniqueId())){
-                        mutedPlayers.get(player.getUniqueId()).cancel();
-                        mutedPlayers.remove(player.getUniqueId());
+            if(strings[0].equals("all") && p.isOp()){ // unmutes all players, ops have access only
+                for(OfflinePlayer target : p.getServer().getOfflinePlayers()) {
+                    if(mutedPlayers.containsKey(target.getUniqueId())){
+                        mutedPlayers.get(target.getUniqueId()).cancel();
+                        mutedPlayers.remove(target.getUniqueId());
+
+                        unmute(target);
                     }
                 }
 
@@ -40,24 +43,36 @@ public class UnmuteCommand implements CommandExecutor {
                 return true;
             }
 
-            Player target = p.getServer().getPlayer(strings[0]);
+            OfflinePlayer target = p.getServer().getOfflinePlayer(strings[0]);
 
-            if (target == null) {
-                p.sendMessage(Component.text("Player not found", NamedTextColor.RED));
-                return true;
-            }
+            if(mutedPlayers.containsKey(target.getUniqueId())){
+                mutedPlayers.get(target.getUniqueId()).cancel();
+                mutedPlayers.remove(target.getUniqueId());
 
-            if(Boolean.TRUE.equals(target.getPersistentDataContainer().get(new NamespacedKey(VindicterraStaffUtils.getPlugin(), "isMuted"), PersistentDataType.BOOLEAN))){
-                target.getPersistentDataContainer().set(new NamespacedKey(VindicterraStaffUtils.getPlugin(), "isMuted"), PersistentDataType.BOOLEAN, false);
-
-                VindicterraStaffUtils.getRunningPlayerMutedTasks().get(target.getUniqueId()).cancel();
-                VindicterraStaffUtils.getRunningPlayerMutedTasks().remove(target.getUniqueId());
+                unmute(target);
             }
             else{
-                p.sendMessage(Component.text("Player not muted", NamedTextColor.RED));
+                p.sendMessage(Component.text("Player not muted.", NamedTextColor.RED));
             }
+            VindicterraStaffUtils.setRunningPlayerMutedTasks(mutedPlayers);
+
             return true;
         }
         return false;
+    }
+
+    public static void unmute(OfflinePlayer offlineTarget){
+        if(offlineTarget == null){
+            return;
+        }
+
+        if(offlineTarget.isOnline()){
+            Player target = Bukkit.getPlayer(offlineTarget.getUniqueId());
+
+            target.getPersistentDataContainer().set(new NamespacedKey(VindicterraStaffUtils.getPlugin(), "isMuted"), PersistentDataType.BOOLEAN, false);
+            return;
+        }
+
+        VindicterraStaffUtils.getScheduleUnmutePlayers().add(offlineTarget.getUniqueId());
     }
 }

@@ -7,6 +7,7 @@ import net.kyori.adventure.text.format.TextColor;
 
 import net.kyori.adventure.text.format.TextDecoration;
 
+import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -14,6 +15,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import org.bukkit.persistence.PersistentDataType;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 import org.jetbrains.annotations.NotNull;
 
@@ -33,24 +35,13 @@ public class MuteCommand implements CommandExecutor {
                 return true;
             }
 
-            return mutePlayer(target, strings); // returns if the command was successful
+            return mutePlayer(p, target, strings); // returns if the command was successful
         }
         return false;
     }
 
-    public static boolean mutePlayer(Player p, String[] strings) {
+    public static boolean mutePlayer(Player p, Player target, String[] strings) {
         if (!p.hasPermission("VSU.punish.mute")) return false;
-
-        if (strings.length == 0) {
-            return false;
-        }
-
-        Player target = p.getServer().getPlayer(strings[0]);
-
-        if (target == null) {
-            p.sendMessage(Component.text("Player not found or not online", NamedTextColor.RED));
-            return true;
-        }
 
         Calendar expireDate = Calendar.getInstance();
 
@@ -118,28 +109,30 @@ public class MuteCommand implements CommandExecutor {
 
         target.getPersistentDataContainer().set(new NamespacedKey(VindicterraStaffUtils.getPlugin(), "isMuted"), PersistentDataType.BOOLEAN, true); // using persistent data containers so the data remains persistent and is on a per-player basis
         target.getPersistentDataContainer().set(new NamespacedKey(VindicterraStaffUtils.getPlugin(), "unmuteTimeStamp"), PersistentDataType.INTEGER, unMuteTimeStamp);
+        VindicterraStaffUtils.getScheduleUnmutePlayers().add(target.getUniqueId());
 
         if (expireDate != null) { // creating a bukkit runnable to unmute the player when their mute time has expired
-            BukkitTask muteTask = p.getServer().getScheduler().runTaskTimer(VindicterraStaffUtils.getPlugin(), () -> {
-                if (((int) (System.currentTimeMillis() / 1000L)) >= unMuteTimeStamp) {
-                    target.getPersistentDataContainer().set(new NamespacedKey(VindicterraStaffUtils.getPlugin(), "isMuted"), PersistentDataType.BOOLEAN, false); // this is used as a condition on whether the player can send a message in chat or not
-                    VindicterraStaffUtils.getRunningPlayerMutedTasks().get(target.getUniqueId()).cancel();
-                }
-            }, 0L, 1200L); // updates every minute
+            new BukkitRunnable() { // this will repeat every minute to check if the player is online
+                @Override
+                public void run() {
+                    Bukkit.getServer().getLogger().info("Unmute timestamp: " + unMuteTimeStamp);
 
-            Map<UUID, BukkitTask> runningTasks = VindicterraStaffUtils.getRunningPlayerMutedTasks();
-            runningTasks.put(target.getUniqueId(), muteTask);
-            VindicterraStaffUtils.setRunningPlayerMutedTasks(runningTasks);
+                    if (((int) (System.currentTimeMillis() / 1000L)) >= unMuteTimeStamp) {
+                        VindicterraStaffUtils.getScheduleUnmutePlayers().remove(target.getUniqueId());
+                        UnmuteCommand.unmute(target);
+
+                        Bukkit.getServer().getLogger().info("Unmuted");
+
+                        this.cancel();
+                    }
+                }
+            }.runTaskTimer(VindicterraStaffUtils.getPlugin(), 0, 1200L);
 
             target.sendMessage(Component.text("\nYou have been muted for " + strings[1] + "\nReason: " + reason + "\n", TextColor.color(255, 0, 0), TextDecoration.BOLD));
         }
-        else { // we want to make sure the player is muted permanently but should also be in the running tasks hashmap so they can be unmuted manually via command, foolproof until 2038
-            BukkitTask muteTask = p.getServer().getScheduler().runTaskTimer(VindicterraStaffUtils.getPlugin(), () -> {
-                if (((int) (System.currentTimeMillis() / 1000L)) >= Integer.MAX_VALUE) {}
-                }, 0L, 1200L);
-
+        else { // we want to make sure the player is muted permanently but should also be in the running tasks hashmap so they can be unmuted manually via command
             Map<UUID, BukkitTask> runningTasks = VindicterraStaffUtils.getRunningPlayerMutedTasks();
-            runningTasks.put(target.getUniqueId(), muteTask);
+            runningTasks.put(target.getUniqueId(), p.getServer().getScheduler().runTaskTimer(VindicterraStaffUtils.getPlugin(), () -> {}, 0L, Long.MAX_VALUE)); // this task repeats every 296533308333 years
             VindicterraStaffUtils.setRunningPlayerMutedTasks(runningTasks);
 
             target.sendMessage(Component.text("\nYou have been permanently muted for: " + reason + "\n", TextColor.color(255, 0, 0), TextDecoration.BOLD));

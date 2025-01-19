@@ -4,6 +4,7 @@ version: '1.1'
 main: me.frostwolf74.vindicterraStaffUtils.VindicterraStaffUtils
 api-version: '1.20'
 
+
 commands:
   # utils
   staff:

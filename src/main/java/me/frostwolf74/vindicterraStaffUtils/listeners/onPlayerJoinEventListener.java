@@ -2,6 +2,7 @@ package me.frostwolf74.vindicterraStaffUtils.listeners;
 
 import me.frostwolf74.vindicterraStaffUtils.VindicterraStaffUtils;
 
+import me.frostwolf74.vindicterraStaffUtils.commands.UnmuteCommand;
 import org.bukkit.NamespacedKey;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -13,6 +14,7 @@ import org.bukkit.scheduler.BukkitTask;
 import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
+import java.util.List;
 
 
 public class onPlayerJoinEventListener implements Listener {
@@ -44,6 +46,14 @@ public class onPlayerJoinEventListener implements Listener {
 
         if(!Objects.equals(e.getPlayer().getPersistentDataContainer().get(new NamespacedKey(VindicterraStaffUtils.getPlugin(), "awaitingInput"), PersistentDataType.STRING), "NONE")) { // TODO in progress
             e.getPlayer().getPersistentDataContainer().set(new NamespacedKey(VindicterraStaffUtils.getPlugin(), "awaitingInput"), PersistentDataType.STRING, "NONE");
+        }
+
+        List<UUID> scheduleUnmutePlayer = VindicterraStaffUtils.getScheduleUnmutePlayers();
+
+        if(scheduleUnmutePlayer.contains(e.getPlayer().getUniqueId())){
+            VindicterraStaffUtils.getScheduleUnmutePlayers().remove(e.getPlayer().getUniqueId());
+
+            UnmuteCommand.unmute(e.getPlayer());
         }
     }
 }

@@ -117,11 +117,7 @@ public class MenuClickEventListener implements Listener {
         p.getPersistentDataContainer().set(new NamespacedKey(VindicterraStaffUtils.getPlugin(), "awaitingInput-reason"), PersistentDataType.STRING, type);
 
         // targeted player is added to the targets list so it can be called from the on-message event listener
-        Map<Player, Player>targets = VindicterraStaffUtils.getTargetPlayers();
-
-        targets.put(p, target);
-
-        VindicterraStaffUtils.setTargetPlayers(targets);
+        VindicterraStaffUtils.getTargetPlayers().put(p, target);
     }
 
     // creates each inventory interface
